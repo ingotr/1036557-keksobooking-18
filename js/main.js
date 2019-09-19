@@ -18,7 +18,7 @@ var adverts = [];
 var author = {};
 var offer = {};
 var mapOfAdvert = document.querySelector('.map');
-var mapPinTemplate = document.querySelector('.map-pin');
+var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var mapPins = document.querySelector('.map__pins');
 
 var userAvatarNumber = function (numberOfAvatars) {
@@ -71,6 +71,7 @@ var createSimilarAdvert = function () {
       },
     };
   }
+  return adverts;
 };
 
 var showDomElements = function () {
@@ -91,7 +92,7 @@ var renderFragment = function () {
   var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < adverts.length; i++) {
-    fragment.appendChild(renderPins(i, adverts[i]));
+    fragment.appendChild(renderPins(adverts[i]));
   }
   mapPins.appendChild(fragment);
 };
