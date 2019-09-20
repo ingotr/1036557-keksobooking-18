@@ -38,7 +38,7 @@ var getRandomNumberInRange = function (min, max) {
   return min + Math.random() * (max - min);
 };
 
-var createRandomAvatarNumber = function (numberOfAvatars) {
+var createRandomAvatarNumbers = function (numberOfAvatars) {
   while (avatarStack.length < numberOfAvatars) {
     var randomNumber = '0' + Math.round(getRandomNumberInRange(1, numberOfAvatars));
     if (avatarStack.indexOf(randomNumber) === -1) {
@@ -61,7 +61,7 @@ var getRandomFeaturesList = function (arr) {
   return randomFeaturesList;
 };
 
-var createSimilarAdvert = function (numberOfAdverts) {
+var createSimilarAdverts = function (numberOfAdverts) {
   for (var i = 0; i < numberOfAdverts; i++) {
     adverts[i] = {
       author: {
@@ -89,11 +89,11 @@ var createSimilarAdvert = function (numberOfAdverts) {
   return adverts;
 };
 
-var showDomElements = function () {
+var showMap = function () {
   mapOfAdvert.classList.remove('map--faded');
 };
 
-var renderPins = function (advert) {
+var generatePin = function (advert) {
   var pinElement = mapPinTemplate.cloneNode(true);
   var pinElementImg = pinElement.querySelector('img');
 
@@ -104,20 +104,20 @@ var renderPins = function (advert) {
   return pinElement;
 };
 
-var renderFragment = function () {
+var renderPins = function () {
   var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < adverts.length; i++) {
-    fragment.appendChild(renderPins(adverts[i]));
+    fragment.appendChild(generatePin(adverts[i]));
   }
   mapPins.appendChild(fragment);
 };
 
 var renderMockData = function () {
-  createRandomAvatarNumber(DEFAULT_ADVERT_COUNT);
-  createSimilarAdvert(DEFAULT_ADVERT_COUNT);
-  renderFragment();
+  createRandomAvatarNumbers(DEFAULT_ADVERT_COUNT);
+  createSimilarAdverts(DEFAULT_ADVERT_COUNT);
+  renderPins();
 };
 
 renderMockData();
-showDomElements();
+showMap();
