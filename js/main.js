@@ -123,15 +123,16 @@ var generateCard = function (advert) {
   var cardType = card.content.querySelector('.popup__type');
   var cardCapacity = card.content.querySelector('.popup__text--capacity');
   var cardCheckinCheckout = card.content.querySelector('.popup__text--time');
-  // var cardFeatures = card.content.querySelector('.popup__features');
-  // var cardFeature = card.content.querySelectorAll('.popup__feature');
+  var cardFeatures = card.content.querySelector('.popup__features');
+  var cardFeature = card.content.querySelectorAll('.popup__feature');
   var cardDescription = card.content.querySelector('.popup__description ');
-  var cardPhotos = card.content.querySelectorAll('.popup__photos ');
-  var cardPhotoList = cardPhotos.querySelectorAll('.popup__photo');
+  var cardPhotos = card.content.querySelector('.popup__photos ');
+  var cardPhoto = cardPhotos.querySelector('.popup__photo');
   var cardAuthorAvatar = card.content.querySelector('.popup__avatar');
 
   var cardPhotosFragment = document.createDocumentFragment();
 
+  cardAuthorAvatar.src = advert.author.avatar;
   cardTitle.innerText = advert.offer.title;
   cardAdress.innerText = advert.offer.address;
   cardPrice.innerText = advert.offer.price + '₽/ночь';
@@ -139,12 +140,28 @@ var generateCard = function (advert) {
   cardCapacity.innerText = advert.offer.rooms + ' комнаты для ' + advert.offer.guests + ' гостей';
   cardCheckinCheckout.innerText = 'Заезд после ' + advert.offer.checkin + ', выезд после ' + advert.offer.checkin + '.';
 
+  console.log(cardFeatures);
+  // console.log(cardFeature);
+
+  debugger;
+  for (var i = 0; i < cardFeature.length; i++) {
+    for (var j = 0; j < advert.offer.features.length; j++) {
+      if (!(cardFeature[i].classList[1].includes(advert.offer.features[j]))) {
+        console.log(advert.offer.features[j]);
+        cardFeatures.removeChild(cardFeature[i]);
+      }
+    }
+  }
+  // console.log(cardFeature[0]);
+  // console.log(cardFeature[0].classList[1]);
+
+  // console.log(cardFeature);
+
   cardDescription.innerText = advert.offer.description;
 
-  // cardPhotos.removeChild[0];
-  for (var i = 0; i < advert.offer.photos.length - 1; i++) {
-    // cardPhoto.src = advert.offer.photos[i];
-    var clonedPhoto = cardPhotoList.cloneNode(true);
+  cardPhotos.removeChild(cardPhoto);
+  for (var i = 0; i < advert.offer.photos.length; i++) {
+    var clonedPhoto = cardPhoto.cloneNode(true);
     clonedPhoto.src = advert.offer.photos[i];
     cardPhotosFragment.appendChild(clonedPhoto);
   }
