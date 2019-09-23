@@ -57,8 +57,12 @@ var getRandomElement = function (arr) {
 var getRandomList = function (arr) {
   var numberOfFeatures = getRandomNumber(arr);
   var randomFeaturesList = [];
+  var randomFeatureIndex = 0;
   for (var i = 0; i < numberOfFeatures; i++) {
-    randomFeaturesList.push(arr[getRandomNumber(arr)]);
+    randomFeatureIndex = getRandomNumber(arr);
+    if (randomFeaturesList.indexOf(arr[randomFeatureIndex]) === -1) {
+      randomFeaturesList.push(arr[randomFeatureIndex]);
+    }
   }
   return randomFeaturesList;
 };
@@ -124,7 +128,7 @@ var generateCard = function (advert) {
   var cardCapacity = card.content.querySelector('.popup__text--capacity');
   var cardCheckinCheckout = card.content.querySelector('.popup__text--time');
   var cardFeatures = card.content.querySelector('.popup__features');
-  var cardFeature = card.content.querySelectorAll('.popup__feature');
+  var cardFeature = cardFeatures.querySelectorAll('.popup__feature');
   var cardDescription = card.content.querySelector('.popup__description ');
   var cardPhotos = card.content.querySelector('.popup__photos ');
   var cardPhoto = cardPhotos.querySelector('.popup__photo');
@@ -140,27 +144,18 @@ var generateCard = function (advert) {
   cardCapacity.innerText = advert.offer.rooms + ' комнаты для ' + advert.offer.guests + ' гостей';
   cardCheckinCheckout.innerText = 'Заезд после ' + advert.offer.checkin + ', выезд после ' + advert.offer.checkin + '.';
 
-  console.log(cardFeatures);
-  // console.log(cardFeature);
-
-  debugger;
   for (var i = 0; i < cardFeature.length; i++) {
     for (var j = 0; j < advert.offer.features.length; j++) {
       if (!(cardFeature[i].classList[1].includes(advert.offer.features[j]))) {
-        console.log(advert.offer.features[j]);
         cardFeatures.removeChild(cardFeature[i]);
       }
     }
   }
-  // console.log(cardFeature[0]);
-  // console.log(cardFeature[0].classList[1]);
-
-  // console.log(cardFeature);
 
   cardDescription.innerText = advert.offer.description;
 
   cardPhotos.removeChild(cardPhoto);
-  for (var i = 0; i < advert.offer.photos.length; i++) {
+  for (i = 0; i < advert.offer.photos.length; i++) {
     var clonedPhoto = cardPhoto.cloneNode(true);
     clonedPhoto.src = advert.offer.photos[i];
     cardPhotosFragment.appendChild(clonedPhoto);
@@ -169,26 +164,13 @@ var generateCard = function (advert) {
 
   cardAuthorAvatar.src = advert.author.avatar;
 
-  // console.log(card);
-  // console.log(cardTitle);
-  // console.log(cardAdress);
-  // console.log(cardPrice);
-  // console.log(cardType);
-  // console.log(cardCapacity);
-  // console.log(cardCheckinCheckout);
-  // console.log(cardDescription);
-
-  // console.log(cardPhotoList);
-  // console.log(cardPhotos);
-  // console.log(advert.offer.photos);
-  // console.log(cardAuthorAvatar.src);
-
   return card;
 };
 
 var renderCards = function () {
   var fragment = document.createDocumentFragment();
 
+  // debugger
   for (var i = 0; i < adverts.length; i++) {
     fragment.appendChild(generateCard(adverts[i]));
   }
@@ -199,7 +181,6 @@ var renderMockData = function () {
   createRandomAvatarNumbers(DEFAULT_ADVERT_COUNT);
   createSimilarAdverts(DEFAULT_ADVERT_COUNT);
   renderPins();
-  // renderCards();
 };
 
 renderMockData();
