@@ -146,12 +146,10 @@ var generateCard = function (advert) {
   cardCheckinCheckout.innerText = 'Заезд после ' + advert.offer.checkin + ', выезд после ' + advert.offer.checkin + '.';
 
   for (var i = 0; i < cardFeature.length; i++) {
-    for (var j = 0; j < advert.offer.features.length; j++) {
-      if ((advert.offer.features[j].indexOf((cardFeature[i].classList[ADVERT_FEATURE_CLASS]).substr(16))) === -1) {
-        cardFeatures.removeChild(cardFeature[i]);
-      } else {
-        continue;
-      }
+    if ((advert.offer.features.indexOf((cardFeature[i].classList[ADVERT_FEATURE_CLASS]).substr(16))) === -1) {
+      cardFeatures.removeChild(cardFeature[i]);
+    } else {
+      continue;
     }
   }
 
