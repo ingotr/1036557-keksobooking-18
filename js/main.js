@@ -14,6 +14,7 @@ var ADVERT_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg',
 var ADVERT_PRICES = [5000, 6400, 7500, 8900, 10000, 12300, 15000];
 var ADVERT_ROOMS_NUMBER = [1, 2, 3, 100];
 var ADVERT_GUESTS_NUMBER = [0, 1, 2, 3];
+var ADVERT_FEATURE_CLASS = 1;
 var LOCATION_X_MIN = 105;
 var LOCATION_X_MAX = 990;
 var LOCATION_Y_MIN = 130;
@@ -146,8 +147,10 @@ var generateCard = function (advert) {
 
   for (var i = 0; i < cardFeature.length; i++) {
     for (var j = 0; j < advert.offer.features.length; j++) {
-      if (!(cardFeature[i].classList[1].includes(advert.offer.features[j]))) {
+      if ((advert.offer.features[j].indexOf((cardFeature[i].classList[ADVERT_FEATURE_CLASS]).substr(16))) === -1) {
         cardFeatures.removeChild(cardFeature[i]);
+      } else {
+        continue;
       }
     }
   }
