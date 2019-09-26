@@ -29,6 +29,10 @@ var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map_
 var mapPins = document.querySelector('.map__pins');
 var mapFiltersContainer = document.querySelector('.map__filters-container');
 
+var adForm = document.querySelector('.ad-form');
+var adFormFieldsets = adForm.querySelectorAll('fieldset');
+var mapFilters = document.querySelector('.map__filters');
+var mapPinMain = document.querySelector('.map__pin--main');
 
 var getUserAvatarNumber = function () {
   return avatarStack.pop();
@@ -190,6 +194,26 @@ var renderMockData = function () {
   renderPins();
 };
 
-renderMockData();
-showMap();
-renderCards();
+var disableAdFormElements = function () {
+  for (var i = 0; i < adFormFieldsets.length; i++) {
+    adFormFieldsets[i].setAttribute('disabled', 'disabled');
+  }
+};
+
+var disableMapFilters = function () {
+  mapFilters.setAttribute('disabled', 'disabled');
+};
+
+var runInactiveState = function () {
+  disableAdFormElements();
+  disableMapFilters();
+};
+
+// renderMockData();
+// showMap();
+// renderCards();
+
+mapPinMain.addEventListener('keydown', function () {
+});
+
+runInactiveState();
