@@ -40,6 +40,8 @@ var adFormFieldsets = adForm.querySelectorAll('fieldset');
 var adFormAdress = adForm.querySelector('#address');
 var mapFilters = document.querySelector('.map__filters');
 var mapPinMain = document.querySelector('.map__pin--main');
+var roomNumber = adForm.querySelector('#room_number');
+var roomCapacity = adForm.querySelector('#capacity');
 
 var getUserAvatarNumber = function () {
   return avatarStack.pop();
@@ -229,36 +231,88 @@ var runActiveState = function () {
   }
 
   adForm.classList.remove('.ad-form--disabled');
-
   mapFilters.removeAttribute('disabled');
 
+  renderMockData();
+  renderCards();
   showMap();
 };
 
-var getPinCoordinate = function (pinElementCoordinate, distanceToPinTip) {
+var getPinAxisCoordinate = function (pinElementCoordinate, distanceToPinTip) {
   var pinElement = pinElementCoordinate;
   var pxIndex = pinElement.indexOf('px');
-  var pinMainLeft = pinElement.slice(0, pxIndex);
-  var coordinate = parseInt(pinMainLeft, DECIMAL_RADIX) + distanceToPinTip;
-  return coordinate;
+  var pinElementNumber = pinElement.slice(0, pxIndex);
+  var pinAxisCoordinate = parseInt(pinElementNumber, DECIMAL_RADIX) + distanceToPinTip;
+  return pinAxisCoordinate;
 };
 
 var getPinMainAdressInactive = function () {
-  adFormAdress.value = getPinCoordinate(mapPinMain.style.left, MAP_PIN_MAIN_HALFWIDTH)
-    + ', ' + getPinCoordinate(mapPinMain.style.top, MAP_PIN_MAIN_HALFHEIGHT);
+  adFormAdress.value = getPinAxisCoordinate(mapPinMain.style.left, MAP_PIN_MAIN_HALFWIDTH)
+    + ', ' + getPinAxisCoordinate(mapPinMain.style.top, MAP_PIN_MAIN_HALFHEIGHT);
 
   return adFormAdress.value;
 };
 
 var getPinMainAdress = function () {
-  adFormAdress.value = getPinCoordinate(mapPinMain.style.left, MAP_PIN_MAIN_HALFWIDTH)
-    + ', ' + getPinCoordinate(mapPinMain.style.top, MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TIP_HEIGHT);
+  adFormAdress.value = getPinAxisCoordinate(mapPinMain.style.left, MAP_PIN_MAIN_HALFWIDTH)
+    + ', ' + getPinAxisCoordinate(mapPinMain.style.top, MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TIP_HEIGHT);
   return adFormAdress.value;
 };
 
-// renderMockData();
-// showMap();
-// renderCards();
+var isRoomCapacityEnough = function () {
+  var customValidityErrorMsg = [
+    'В одной комнате хватит места только на одного гостя. Попробуйте другой вариант',
+    'Здесь гости не поместятся. Попробуйте другой вариант',
+    'К сожалению, это не гостевой вариант. Попробуйте другой вариант',
+  ];
+
+  switch (roomNumber.value) {
+    case '1':
+    {
+      if (roomCapacity.value !== '1') {
+        roomNumber.setCustomValidity(customValidityErrorMsg[0]);
+      } else {
+        roomNumber.setCustomValidity('');
+      }
+      break;
+    }
+    case '2':
+    {
+      if (roomCapacity.value !== '1') {
+        if (roomCapacity.value !== '2') {
+          roomNumber.setCustomValidity(customValidityErrorMsg[1]);
+        } else {
+          roomNumber.setCustomValidity('');
+        }
+      } else {
+        roomNumber.setCustomValidity('');
+      }
+      break;
+    }
+    case '3':
+    {
+      if (roomCapacity.value === '0') {
+        roomNumber.setCustomValidity(customValidityErrorMsg[1]);
+      } else {
+        roomNumber.setCustomValidity('');
+      }
+      break;
+    }
+    case '100':
+    {
+      if (roomCapacity.value !== '0') {
+        roomNumber.setCustomValidity(customValidityErrorMsg[2]);
+      } else {
+        roomNumber.setCustomValidity('');
+      }
+      break;
+    }
+  }
+};
+
+roomNumber.addEventListener('change', isRoomCapacityEnough);
+roomCapacity.addEventListener('change', isRoomCapacityEnough);
+
 
 mapPinMain.addEventListener('mousedown', function () {
   runActiveState();
