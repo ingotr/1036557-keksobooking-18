@@ -21,6 +21,11 @@ var LOCATION_X_MAX = 990;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
 var ENTER_KEYCODE = 13;
+var MAP_PIN_MAIN_HALFWIDTH = 33;
+var MAP_PIN_MAIN_HEIGHT = 65;
+var MAP_PIN_MAIN_HALFHEIGHT = 33;
+var MAP_PIN_MAIN_TIP_HEIGHT = 20;
+var DECIMAL_RADIX = 10;
 
 var adverts = [];
 var avatarStack = [];
@@ -32,6 +37,7 @@ var mapFiltersContainer = document.querySelector('.map__filters-container');
 
 var adForm = document.querySelector('.ad-form');
 var adFormFieldsets = adForm.querySelectorAll('fieldset');
+var adFormAdress = adForm.querySelector('#address');
 var mapFilters = document.querySelector('.map__filters');
 var mapPinMain = document.querySelector('.map__pin--main');
 
@@ -209,10 +215,12 @@ var runInactiveState = function () {
   mapPinMain.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
       runActiveState();
+      getPinMainAdress();
     }
   });
   disableAdFormElements();
   disableMapFilters();
+  getPinMainAdressInactive();
 };
 
 var runActiveState = function () {
@@ -227,12 +235,34 @@ var runActiveState = function () {
   showMap();
 };
 
+var getPinCoordinate = function (pinElementCoordinate, distanceToPinTip) {
+  var pinElement = pinElementCoordinate;
+  var pxIndex = pinElement.indexOf('px');
+  var pinMainLeft = pinElement.slice(0, pxIndex);
+  var coordinate = parseInt(pinMainLeft, DECIMAL_RADIX) + distanceToPinTip;
+  return coordinate;
+};
+
+var getPinMainAdressInactive = function () {
+  adFormAdress.value = getPinCoordinate(mapPinMain.style.left, MAP_PIN_MAIN_HALFWIDTH)
+    + ', ' + getPinCoordinate(mapPinMain.style.top, MAP_PIN_MAIN_HALFHEIGHT);
+
+  return adFormAdress.value;
+};
+
+var getPinMainAdress = function () {
+  adFormAdress.value = getPinCoordinate(mapPinMain.style.left, MAP_PIN_MAIN_HALFWIDTH)
+    + ', ' + getPinCoordinate(mapPinMain.style.top, MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TIP_HEIGHT);
+  return adFormAdress.value;
+};
+
 // renderMockData();
 // showMap();
 // renderCards();
 
 mapPinMain.addEventListener('mousedown', function () {
   runActiveState();
+  getPinMainAdress();
 });
 
 runInactiveState();
