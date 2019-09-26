@@ -33,6 +33,8 @@ var mapOfAdvert = document.querySelector('.map');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var mapPins = document.querySelector('.map__pins');
+var mapPinsHeight = mapPins.scrollHeight;
+var mapPinsWidth = mapPins.scrollWidth;
 var mapFiltersContainer = document.querySelector('.map__filters-container');
 
 var adForm = document.querySelector('.ad-form');
@@ -238,11 +240,36 @@ var runActiveState = function () {
   showMap();
 };
 
+var getMaxMinAxisCoordinate = function (pinElementCoordinate, pinElementNumber) {
+  switch (pinElementCoordinate) {
+    case 'mapPinMain.style.left': {
+      if (pinElementNumber <= 0) {
+        pinElementNumber = 0;
+      }
+      if (pinElementNumber > mapPinsWidth) {
+        pinElementNumber = mapPinsWidth;
+      }
+      break;
+    }
+    case 'mapPinMain.style.top': {
+      if (pinElementNumber <= 0) {
+        pinElementNumber = 0;
+      }
+      if (pinElementNumber > mapPinsHeight) {
+        pinElementNumber = mapPinsHeight;
+      }
+      break;
+    }
+  }
+  return pinElementNumber;
+};
+
 var getPinAxisCoordinate = function (pinElementCoordinate, distanceToPinTip) {
   var pinElement = pinElementCoordinate;
   var pxIndex = pinElement.indexOf('px');
   var pinElementNumber = pinElement.slice(0, pxIndex);
-  var pinAxisCoordinate = parseInt(pinElementNumber, DECIMAL_RADIX) + distanceToPinTip;
+  var pinElementNumberInRange = getMaxMinAxisCoordinate(pinElementCoordinate, pinElementNumber);
+  var pinAxisCoordinate = parseInt(pinElementNumberInRange, DECIMAL_RADIX) + distanceToPinTip;
   return pinAxisCoordinate;
 };
 
