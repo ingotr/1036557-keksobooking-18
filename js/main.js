@@ -20,6 +20,7 @@ var LOCATION_X_MIN = 105;
 var LOCATION_X_MAX = 990;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
+var ENTER_KEYCODE = 13;
 
 var adverts = [];
 var avatarStack = [];
@@ -205,15 +206,33 @@ var disableMapFilters = function () {
 };
 
 var runInactiveState = function () {
+  mapPinMain.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      runActiveState();
+    }
+  });
   disableAdFormElements();
   disableMapFilters();
+};
+
+var runActiveState = function () {
+  for (var i = 0; i < adFormFieldsets.length; i++) {
+    adFormFieldsets[i].removeAttribute('disabled');
+  }
+
+  adForm.classList.remove('.ad-form--disabled');
+
+  mapFilters.removeAttribute('disabled');
+
+  showMap();
 };
 
 // renderMockData();
 // showMap();
 // renderCards();
 
-mapPinMain.addEventListener('keydown', function () {
+mapPinMain.addEventListener('mousedown', function () {
+  runActiveState();
 });
 
 runInactiveState();
