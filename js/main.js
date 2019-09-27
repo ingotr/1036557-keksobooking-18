@@ -17,10 +17,23 @@ var ADVERT_GUESTS_NUMBER = [0, 1, 2, 3];
 var ADVERT_FEATURE_CLASS = 1;
 var ADVERT_FEATURE_PREFIX_LENGTH = 16;
 
-var GUEST_CONFIG = {
-  1: ['1'],
-  2: ['1', '2'],
-  3: ['1', '2', '3']
+var ROOMS_GUESTS_CONFIG = {
+  '1': {
+    val: ['1'],
+    errMsg: '1 комната только для 1 гостя',
+  },
+  '2': {
+    val: ['1', '2'],
+    errMsg: '2 комнаты для 1 или 2 гостей',
+  },
+  '3': {
+    val: ['1', '2', '3'],
+    errMsg: '3 комнаты для 1, 2 или 3 гостей',
+  },
+  '100': {
+    val: ['0'],
+    errMsg: '100 комнат не для гостей',
+  },
 };
 
 var LOCATION_X_MIN = 105;
@@ -49,8 +62,8 @@ var adFormFieldsets = adForm.querySelectorAll('fieldset');
 var adFormAdress = adForm.querySelector('#address');
 var mapFilters = document.querySelector('.map__filters');
 var mapPinMain = document.querySelector('.map__pin--main');
-var roomNumber = adForm.querySelector('#room_number');
-var roomCapacity = adForm.querySelector('#capacity');
+var selectRoomsElement = adForm.querySelector('#room_number');
+var selectGuestsElement = adForm.querySelector('#capacity');
 
 var isReceivedData = false;
 
@@ -299,55 +312,45 @@ var getPinMainAdress = function () {
   return adFormAdress.value;
 };
 
-var isRoomCapacityEnough = function () {
-  var customValidityErrorMsg = [
-    'В одной комнате хватит места только на одного гостя. Попробуйте другой вариант',
-    'Здесь гости не поместятся. Попробуйте другой вариант',
-    'К сожалению, это не гостевой вариант. Попробуйте другой вариант',
-  ];
+var isRoomCapacityEnough = function (rooms) {
+  var guests = selectGuestsElement.value;
 
-  switch (roomNumber.value) {
+  if ((ROOMS_GUESTS_CONFIG[rooms].val.indexOf(guests)) === -1) {
+    return ROOMS_GUESTS_CONFIG[rooms].errMsg;
+  } else {
+    return '';
+  }
+};
+
+var validateRoomsGuestsNumber = function () {
+  var rooms = selectRoomsElement.value;
+
+  switch (rooms) {
     case '1':
     {
-      if ((GUEST_CONFIG[1].indexOf(roomCapacity.value)) === -1) {
-        roomNumber.setCustomValidity(customValidityErrorMsg[0]);
-      } else {
-        roomNumber.setCustomValidity('');
-      }
+      selectRoomsElement.setCustomValidity(isRoomCapacityEnough(rooms));
       break;
     }
     case '2':
     {
-      if ((GUEST_CONFIG[2].indexOf(roomCapacity.value)) === -1) {
-        roomNumber.setCustomValidity(customValidityErrorMsg[1]);
-      } else {
-        roomNumber.setCustomValidity('');
-      }
+      selectRoomsElement.setCustomValidity(isRoomCapacityEnough(rooms));
       break;
     }
     case '3':
     {
-      if ((GUEST_CONFIG[3].indexOf(roomCapacity.value)) === -1) {
-        roomNumber.setCustomValidity(customValidityErrorMsg[1]);
-      } else {
-        roomNumber.setCustomValidity('');
-      }
+      selectRoomsElement.setCustomValidity(isRoomCapacityEnough(rooms));
       break;
     }
     case '100':
     {
-      if (roomCapacity.value !== '0') {
-        roomNumber.setCustomValidity(customValidityErrorMsg[2]);
-      } else {
-        roomNumber.setCustomValidity('');
-      }
+      selectRoomsElement.setCustomValidity(isRoomCapacityEnough(rooms));
       break;
     }
   }
 };
 
-roomNumber.addEventListener('change', isRoomCapacityEnough);
-roomCapacity.addEventListener('change', isRoomCapacityEnough);
+selectRoomsElement.addEventListener('change', validateRoomsGuestsNumber);
+selectGuestsElement.addEventListener('change', validateRoomsGuestsNumber);
 
 
 mapPinMain.addEventListener('mousedown', function () {
