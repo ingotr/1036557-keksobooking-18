@@ -16,6 +16,13 @@ var ADVERT_ROOMS_NUMBER = [1, 2, 3, 100];
 var ADVERT_GUESTS_NUMBER = [0, 1, 2, 3];
 var ADVERT_FEATURE_CLASS = 1;
 var ADVERT_FEATURE_PREFIX_LENGTH = 16;
+
+var GUEST_CONFIG = {
+  1: ['1'],
+  2: ['1', '2'],
+  3: ['1', '2', '3']
+};
+
 var LOCATION_X_MIN = 105;
 var LOCATION_X_MAX = 990;
 var LOCATION_Y_MIN = 130;
@@ -44,6 +51,8 @@ var mapFilters = document.querySelector('.map__filters');
 var mapPinMain = document.querySelector('.map__pin--main');
 var roomNumber = adForm.querySelector('#room_number');
 var roomCapacity = adForm.querySelector('#capacity');
+
+var isReceivedData = false;
 
 var getUserAvatarNumber = function () {
   return avatarStack.pop();
@@ -235,8 +244,12 @@ var runActiveState = function () {
   adForm.classList.remove('.ad-form--disabled');
   mapFilters.removeAttribute('disabled');
 
-  renderMockData();
-  renderCards();
+  if (!isReceivedData) {
+    renderMockData();
+    renderCards();
+    isReceivedData = true;
+  }
+
   showMap();
 };
 
@@ -296,7 +309,7 @@ var isRoomCapacityEnough = function () {
   switch (roomNumber.value) {
     case '1':
     {
-      if (roomCapacity.value !== '1') {
+      if ((GUEST_CONFIG[1].indexOf(roomCapacity.value)) === -1) {
         roomNumber.setCustomValidity(customValidityErrorMsg[0]);
       } else {
         roomNumber.setCustomValidity('');
@@ -305,12 +318,8 @@ var isRoomCapacityEnough = function () {
     }
     case '2':
     {
-      if (roomCapacity.value !== '1') {
-        if (roomCapacity.value !== '2') {
-          roomNumber.setCustomValidity(customValidityErrorMsg[1]);
-        } else {
-          roomNumber.setCustomValidity('');
-        }
+      if ((GUEST_CONFIG[2].indexOf(roomCapacity.value)) === -1) {
+        roomNumber.setCustomValidity(customValidityErrorMsg[1]);
       } else {
         roomNumber.setCustomValidity('');
       }
@@ -318,7 +327,7 @@ var isRoomCapacityEnough = function () {
     }
     case '3':
     {
-      if (roomCapacity.value === '0') {
+      if ((GUEST_CONFIG[3].indexOf(roomCapacity.value)) === -1) {
         roomNumber.setCustomValidity(customValidityErrorMsg[1]);
       } else {
         roomNumber.setCustomValidity('');
