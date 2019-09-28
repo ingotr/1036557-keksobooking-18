@@ -228,6 +228,7 @@ var renderMockData = function () {
 };
 
 var disableAdFormElements = function () {
+  adForm.classList.add('ad-form--disabled');
   for (var i = 0; i < adFormFieldsets.length; i++) {
     adFormFieldsets[i].setAttribute('disabled', 'disabled');
   }
@@ -254,7 +255,7 @@ var runActiveState = function () {
     adFormFieldsets[i].removeAttribute('disabled');
   }
 
-  adForm.classList.remove('.ad-form--disabled');
+  adForm.classList.remove('ad-form--disabled');
   mapFilters.removeAttribute('disabled');
 
   if (!isReceivedData) {
@@ -312,40 +313,14 @@ var getPinMainAdress = function () {
   return adFormAdress.value;
 };
 
-var isRoomCapacityEnough = function (rooms) {
+var validateRoomsGuestsNumber = function () {
+  var rooms = selectRoomsElement.value;
   var guests = selectGuestsElement.value;
 
   if ((ROOMS_GUESTS_CONFIG[rooms].val.indexOf(guests)) === -1) {
-    return ROOMS_GUESTS_CONFIG[rooms].errMsg;
+    selectRoomsElement.setCustomValidity(ROOMS_GUESTS_CONFIG[rooms].errMsg);
   } else {
-    return '';
-  }
-};
-
-var validateRoomsGuestsNumber = function () {
-  var rooms = selectRoomsElement.value;
-
-  switch (rooms) {
-    case '1':
-    {
-      selectRoomsElement.setCustomValidity(isRoomCapacityEnough(rooms));
-      break;
-    }
-    case '2':
-    {
-      selectRoomsElement.setCustomValidity(isRoomCapacityEnough(rooms));
-      break;
-    }
-    case '3':
-    {
-      selectRoomsElement.setCustomValidity(isRoomCapacityEnough(rooms));
-      break;
-    }
-    case '100':
-    {
-      selectRoomsElement.setCustomValidity(isRoomCapacityEnough(rooms));
-      break;
-    }
+    selectRoomsElement.setCustomValidity('');
   }
 };
 
