@@ -40,12 +40,14 @@ var LOCATION_X_MIN = 105;
 var LOCATION_X_MAX = 990;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
-var ENTER_KEYCODE = 13;
 var MAP_PIN_MAIN_HALFWIDTH = 33;
 var MAP_PIN_MAIN_HEIGHT = 65;
 var MAP_PIN_MAIN_HALFHEIGHT = 33;
 var MAP_PIN_MAIN_TIP_HEIGHT = 20;
 var DECIMAL_RADIX = 10;
+
+var ENTER_KEYCODE = 13;
+var ESC_KEYCODE = 27;
 
 var adverts = [];
 var avatarStack = [];
@@ -66,6 +68,8 @@ var selectRoomsElement = adForm.querySelector('#room_number');
 var selectGuestsElement = adForm.querySelector('#capacity');
 
 var isReceivedData = false;
+
+var cardList = [];
 
 var getUserAvatarNumber = function () {
   return avatarStack.pop();
@@ -149,12 +153,45 @@ var generatePin = function (advert) {
   return pinElement;
 };
 
+var onCardEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeCard();
+  }
+};
+
+var openCard = function (card) {
+  card.classList.remove('hidden');
+  document.addEventListener('keydown', onCardEscPress);
+};
+
+var closeCard = function (card) {
+  card.classList.add('hidden');
+  document.removeEventListener('keydown', onCardEscPress);
+};
+
 var renderPins = function () {
   var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < adverts.length; i++) {
     fragment.appendChild(generatePin(adverts[i]));
   }
+
+  for (i = 0; i < fragment.children.length; i++) {
+    fragment.children[i].addEventListener('click', function () {
+      openCard(cardList[i]);
+    });
+
+    fragment.children[i].addEventListener('keydown', function (evt) {
+      if (evt.keyCode === ENTER_KEYCODE) {
+        openCard(cardList[i]);
+      }
+    });
+  }
+
+  // console.log(cardList[0].classList.remove('hidden'));
+  // console.log(fragment.children);
+  // console.log(pinList);
+  // console.log(pinList[0]);
   mapPins.appendChild(fragment);
 };
 
@@ -218,13 +255,19 @@ var renderCards = function () {
   for (var i = 0; i < adverts.length; i++) {
     fragment.appendChild(generateCard(adverts[i]));
   }
+
+  for (i = 0; i < fragment.children.length; i++) {
+    fragment.children[i].classList.add('hidden');
+  }
+
+  cardList = fragment.children;
   mapOfAdvert.insertBefore(fragment, mapFiltersContainer);
 };
 
 var renderMockData = function () {
   createRandomAvatarNumbers(DEFAULT_ADVERT_COUNT);
   createSimilarAdverts(DEFAULT_ADVERT_COUNT);
-  renderPins();
+  renderPins(cardList);
 };
 
 var disableAdFormElements = function () {
