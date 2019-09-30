@@ -159,8 +159,8 @@ var onCardEscPress = function (evt) {
   }
 };
 
-var openCard = function (card) {
-  card.classList.remove('hidden');
+var openCard = function (i) {
+  cardList[i].classList.remove('hidden');
   document.addEventListener('keydown', onCardEscPress);
 };
 
@@ -176,14 +176,35 @@ var renderPins = function () {
     fragment.appendChild(generatePin(adverts[i]));
   }
 
-  for (i = 0; i < fragment.children.length; i++) {
+  // for (i = 0; i < fragment.children.length; i++) {
+  //   fragment.children[i].addEventListener('click', function () {
+  //     openCard(i);
+  //   });
+
+  //   fragment.children[i].addEventListener('keydown', function (evt) {
+  //     if (evt.keyCode === ENTER_KEYCODE) {
+  //       openCard(cardList[i]);
+  //     }
+  //   });
+  // }
+
+  // // console.log(cardList[0].classList.remove('hidden'));
+  // // console.log(fragment.children);
+  // // console.log(pinList);
+  // // console.log(pinList[0]);
+  // mapPins.appendChild(fragment);
+  return fragment;
+};
+
+var addListenerToPins = function (fragment) {
+  for (var i = 0; i < fragment.children.length; i++) {
     fragment.children[i].addEventListener('click', function () {
-      openCard(cardList[i]);
+      openCard(i);
     });
 
     fragment.children[i].addEventListener('keydown', function (evt) {
       if (evt.keyCode === ENTER_KEYCODE) {
-        openCard(cardList[i]);
+        openCard(i);
       }
     });
   }
@@ -256,18 +277,47 @@ var renderCards = function () {
     fragment.appendChild(generateCard(adverts[i]));
   }
 
-  for (i = 0; i < fragment.children.length; i++) {
+  // for (i = 0; i < fragment.children.length; i++) {
+  //   currentCloseButton = fragment.children[i].querySelector('.popup__close');
+  //   currentCloseButton.addEventListener('click', function () {
+  //     fragment.children[i].classList.add('hidden');
+  //   });
+  //   fragment.children[i].classList.add('hidden');
+  // }
+
+  // mapOfAdvert.insertBefore(fragment, mapFiltersContainer);
+  // cardList = mapOfAdvert.querySelectorAll('.map__card');
+  // // for (i = 0; i < cardList.length; i++) {
+  // //   cardList[i]
+  // // };
+  // console.log(mapOfAdvert);
+  // console.log(cardList);
+  return fragment;
+};
+
+var addListenerToCards = function (fragment) {
+  var currentCloseButton;
+  for (var i = 0; i < fragment.children.length; i++) {
+    currentCloseButton = fragment.children[i].querySelector('.popup__close');
+    currentCloseButton.addEventListener('click', function () {
+      fragment.children[i].classList.add('hidden');
+    });
     fragment.children[i].classList.add('hidden');
   }
 
-  cardList = fragment.children;
   mapOfAdvert.insertBefore(fragment, mapFiltersContainer);
+  cardList = mapOfAdvert.querySelectorAll('.map__card');
+  // for (i = 0; i < cardList.length; i++) {
+  //   cardList[i]
+  // };
+  // console.log(mapOfAdvert);
+  // console.log(cardList);
 };
 
 var renderMockData = function () {
   createRandomAvatarNumbers(DEFAULT_ADVERT_COUNT);
   createSimilarAdverts(DEFAULT_ADVERT_COUNT);
-  renderPins(cardList);
+  // renderPins();
 };
 
 var disableAdFormElements = function () {
@@ -303,7 +353,9 @@ var runActiveState = function () {
 
   if (!isReceivedData) {
     renderMockData();
-    renderCards();
+    // debugger
+    addListenerToPins(renderPins());
+    addListenerToCards(renderCards());
     isReceivedData = true;
   }
 
