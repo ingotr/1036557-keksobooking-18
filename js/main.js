@@ -36,6 +36,21 @@ var ROOMS_GUESTS_CONFIG = {
   },
 };
 
+var PRICE_TYPE_CONFING = {
+  'bungalo': {
+    val: '0',
+  },
+  'flat': {
+    val: '1000',
+  },
+  'house': {
+    val: '5000',
+  },
+  'palace': {
+    val: '10000',
+  },
+};
+
 var LOCATION_X_MIN = 105;
 var LOCATION_X_MAX = 990;
 var LOCATION_Y_MIN = 130;
@@ -66,6 +81,10 @@ var mapFilters = document.querySelector('.map__filters');
 var mapPinMain = document.querySelector('.map__pin--main');
 var selectRoomsElement = adForm.querySelector('#room_number');
 var selectGuestsElement = adForm.querySelector('#capacity');
+var selectTimein = adForm.querySelector('#timein');
+var selectTimeout = adForm.querySelector('#timeout');
+var selectType = adForm.querySelector('#type');
+var numberPrice = adForm.querySelector('#price');
 
 var isReceivedData = false;
 
@@ -157,10 +176,10 @@ var onCardEscPress = function (evt) {
   }
 };
 
-var openCard = function (obj) {
-  obj.card.classList.remove('hidden');
-  document.addEventListener('keydown', onCardEscPress);
-};
+// var openCard = function (obj) {
+//   obj.card.classList.remove('hidden');
+//   document.addEventListener('keydown', onCardEscPress);
+// };
 
 var closeCard = function (obj) {
   obj.card.classList.add('hidden');
@@ -177,23 +196,7 @@ var closeCard = function (obj) {
 //   return fragment;
 // };
 
-// var addListenerToPins = function (fragment) {
-//   for (var i = 0; i < fragment.children.length; i++) {
-//     fragment.children[i].addEventListener('click', function () {
-//       openCard(i);
-//     });
-
-//     fragment.children[i].addEventListener('keydown', function (evt) {
-//       if (evt.keyCode === ENTER_KEYCODE) {
-//         openCard(i);
-//       }
-//     });
-//   }
-
-//   mapPins.appendChild(fragment);
-// };
-
-function AdvertElement (index, pin, card) {
+function AdvertElement(index, pin, card) {
   this.index = index;
   this.pin = pin;
   this.card = card;
@@ -218,26 +221,22 @@ var addListenersToPinsCards = function () {
   var pinsList = [];
   var cardList = [];
   var advertList = [];
+  var index = 0;
 
   for (var i = 0; i < adverts.length; i++) {
+    index = i;
     fragmentOfPins.appendChild(generatePin(adverts[i]));
     pinsList = fragmentOfPins;
     fragmentOfCards.appendChild(generateCard(adverts[i]));
     cardList = fragmentOfCards;
-    fragmentOfCards.children[i].classList.add('hidden');
-    advertList[i] = new AdvertElement(i, pinsList.children[i], cardList.children[i]);
-    advertList[i].pin.addEventListener('click', function () {
-      console.log(this.img);
-      console.log(event.target);
-      for (i = 0; i < cardList.length; i++) {
-        if (this.img.src === cardList[i].cardAuthorAvatar.src) {
-          cardList[i].classList.remove('hidden');
-        }
-      }
+    fragmentOfCards.children[index].classList.add('hidden');
+    advertList[index] = new AdvertElement(index, pinsList.children[index], cardList.children[index]);
+    advertList[index].pin.addEventListener('click', function () {
+      advertList[index].card.classList.remove('hidden');
     });
-    currentCloseButton = advertList[i].card.querySelector('.popup__close');
+    currentCloseButton = advertList[index].card.querySelector('.popup__close');
     currentCloseButton.addEventListener('click', function () {
-      advertList[i].card.classList.add('hidden');
+      advertList[index].card.classList.add('hidden');
     });
   }
   mapPins.appendChild(fragmentOfPins);
@@ -362,7 +361,6 @@ var runActiveState = function () {
 
   if (!isReceivedData) {
     renderMockData();
-    debugger;
     // addListenerToPins(renderPins());
     // addListenerToCards(renderCards());
     addListenersToPinsCards();
@@ -429,6 +427,30 @@ var validateRoomsGuestsNumber = function () {
   }
 };
 
+var synchronizeTimein = function () {
+  var timein = selectTimein.value;
+
+  selectTimeout.value = timein;
+};
+
+var synchronizeTimeout = function () {
+  var timeout = selectTimeout.value;
+
+  selectTimein.value = timeout;
+};
+
+var choosePriceByType = function () {
+  var optionSelectType = selectType.value;
+
+  if (PRICE_TYPE_CONFING.indexOf(optionSelectType)) {
+    numberPrice.min = PRICE_TYPE_CONFING[optionSelectType].val;
+    numberPrice.placeholder = PRICE_TYPE_CONFING[optionSelectType].val;
+  }
+};
+
+selectType.addEventListener('change', choosePriceByType);
+selectTimein.addEventListener('change', synchronizeTimein);
+selectTimeout.addEventListener('change', synchronizeTimeout);
 selectRoomsElement.addEventListener('change', validateRoomsGuestsNumber);
 selectGuestsElement.addEventListener('change', validateRoomsGuestsNumber);
 
