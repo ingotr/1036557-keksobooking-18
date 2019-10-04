@@ -38,16 +38,16 @@ var ROOMS_GUESTS_CONFIG = {
 
 var PRICE_TYPE_CONFING = {
   'bungalo': {
-    val: '0',
+    price: '0',
   },
   'flat': {
-    val: '1000',
+    price: '1000',
   },
   'house': {
-    val: '5000',
+    price: '5000',
   },
   'palace': {
-    val: '10000',
+    price: '10000',
   },
 };
 
@@ -85,6 +85,7 @@ var selectTimein = adForm.querySelector('#timein');
 var selectTimeout = adForm.querySelector('#timeout');
 var selectType = adForm.querySelector('#type');
 var numberPrice = adForm.querySelector('#price');
+var advertList = [];
 
 var isReceivedData = false;
 
@@ -170,79 +171,61 @@ var generatePin = function (advert) {
   return pinElement;
 };
 
-var onCardEscPress = function (evt) {
+var onCardEscPress = function (evt, obj) {
   if (evt.keyCode === ESC_KEYCODE) {
-    closeCard();
+    obj.card.classList.add('hidden');
+    document.removeEventListener('keydown', onCardEscPress(obj));
   }
 };
 
-// var openCard = function (obj) {
-//   obj.card.classList.remove('hidden');
-//   document.addEventListener('keydown', onCardEscPress);
-// };
+var openCard = function (obj) {
+  obj.pin.addEventListener('click', function () {
+    obj.card.classList.remove('hidden');
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === ESC_KEYCODE) {
+        obj.card.classList.add('hidden');
+        document.removeEventListener('keydown', onCardEscPress(obj));
+      }
+    });
+  });
+};
 
 var closeCard = function (obj) {
-  obj.card.classList.add('hidden');
-  document.removeEventListener('keydown', onCardEscPress);
+  obj.closeButton = obj.card.querySelector('.popup__close');
+  obj.closeButton.addEventListener('click', function () {
+    obj.card.classList.add('hidden');
+    document.removeEventListener('keydown', onCardEscPress(obj));
+  });
 };
 
-// var renderPins = function () {
-//   var fragment = document.createDocumentFragment();
-
-//   for (var i = 0; i < adverts.length; i++) {
-//     fragment.appendChild(generatePin(adverts[i]));
-//   }
-
-//   return fragment;
-// };
-
-function AdvertElement(index, pin, card) {
-  this.index = index;
-  this.pin = pin;
-  this.card = card;
-}
-
-var testAdvert = function (number) {
-  var testAdvertArr = [];
-  for (var i = 0; i < number; i++) {
-    testAdvertArr[i] = new AdvertElement(i, i + 1, i + 2);
-  }
-  var myAdvert = new AdvertElement(0, 1, 2);
-  console.log(myAdvert);
-  console.log(testAdvertArr);
-};
-
-testAdvert(4);
-
-var addListenersToPinsCards = function () {
-  var fragmentOfPins = document.createDocumentFragment();
-  var fragmentOfCards = document.createDocumentFragment();
-  var currentCloseButton;
-  var pinsList = [];
-  var cardList = [];
-  var advertList = [];
-  var index = 0;
+var renderPins = function () {
+  var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < adverts.length; i++) {
-    index = i;
-    fragmentOfPins.appendChild(generatePin(adverts[i]));
-    pinsList = fragmentOfPins;
-    fragmentOfCards.appendChild(generateCard(adverts[i]));
-    cardList = fragmentOfCards;
-    fragmentOfCards.children[index].classList.add('hidden');
-    advertList[index] = new AdvertElement(index, pinsList.children[index], cardList.children[index]);
-    advertList[index].pin.addEventListener('click', function () {
-      advertList[index].card.classList.remove('hidden');
-    });
-    currentCloseButton = advertList[index].card.querySelector('.popup__close');
-    currentCloseButton.addEventListener('click', function () {
-      advertList[index].card.classList.add('hidden');
-    });
+    fragment.appendChild(generatePin(adverts[i]));
   }
-  mapPins.appendChild(fragmentOfPins);
-  mapOfAdvert.insertBefore(fragmentOfCards, mapFiltersContainer);
 
-  console.log(advertList);
+  return fragment;
+};
+
+function AdvertElement(pin, card) {
+  this.pin = pin;
+  this.card = card;
+
+  openCard(this);
+  closeCard(this);
+}
+
+var addListenersToPinsCards = function () {
+  var pinsList = renderPins();
+  var cardList = renderCards();
+
+  for (var i = 0; i < adverts.length; i++) {
+    advertList[i] = new AdvertElement(pinsList.children[i], cardList.children[i]);
+  }
+
+  mapPins.appendChild(pinsList);
+  mapOfAdvert.insertBefore(cardList, mapFiltersContainer);
 };
 
 var generateCardFeatureList = function (advert, cardFeatures, cardFeature) {
@@ -299,29 +282,16 @@ var generateCard = function (advert) {
   return card;
 };
 
-// var renderCards = function () {
-//   var fragment = document.createDocumentFragment();
+var renderCards = function () {
+  var fragment = document.createDocumentFragment();
 
-//   for (var i = 0; i < adverts.length; i++) {
-//     fragment.appendChild(generateCard(adverts[i]));
-//   }
+  for (var i = 0; i < adverts.length; i++) {
+    fragment.appendChild(generateCard(adverts[i]));
+    fragment.children[i].classList.add('hidden');
+  }
 
-//   return fragment;
-// };
-
-// var addListenerToCards = function (fragment) {
-//   var currentCloseButton;
-//   for (var i = 0; i < fragment.children.length; i++) {
-//     currentCloseButton = fragment.children[i].querySelector('.popup__close');
-//     currentCloseButton.addEventListener('click', function () {
-//       fragment.children[i].classList.add('hidden');
-//     });
-//     fragment.children[i].classList.add('hidden');
-//   }
-
-//   mapOfAdvert.insertBefore(fragment, mapFiltersContainer);
-//   cardList = mapOfAdvert.querySelectorAll('.map__card');
-// };
+  return fragment;
+};
 
 var renderMockData = function () {
   createRandomAvatarNumbers(DEFAULT_ADVERT_COUNT);
@@ -361,8 +331,7 @@ var runActiveState = function () {
 
   if (!isReceivedData) {
     renderMockData();
-    // addListenerToPins(renderPins());
-    // addListenerToCards(renderCards());
+
     addListenersToPinsCards();
     isReceivedData = true;
   }
@@ -439,16 +408,16 @@ var synchronizeTimeout = function () {
   selectTimein.value = timeout;
 };
 
-var choosePriceByType = function () {
+var getPriceByType = function () {
   var optionSelectType = selectType.value;
 
-  if (PRICE_TYPE_CONFING.indexOf(optionSelectType)) {
-    numberPrice.min = PRICE_TYPE_CONFING[optionSelectType].val;
-    numberPrice.placeholder = PRICE_TYPE_CONFING[optionSelectType].val;
+  if (PRICE_TYPE_CONFING.hasOwnProperty(optionSelectType)) {
+    numberPrice.min = PRICE_TYPE_CONFING[optionSelectType].price;
+    numberPrice.placeholder = PRICE_TYPE_CONFING[optionSelectType].price;
   }
 };
 
-selectType.addEventListener('change', choosePriceByType);
+selectType.addEventListener('change', getPriceByType);
 selectTimein.addEventListener('change', synchronizeTimein);
 selectTimeout.addEventListener('change', synchronizeTimeout);
 selectRoomsElement.addEventListener('change', validateRoomsGuestsNumber);
