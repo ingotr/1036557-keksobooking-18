@@ -319,6 +319,8 @@ var runInactiveState = function () {
   disableAdFormElements();
   disableMapFilters();
   getPinMainAdressInactive();
+  getPriceByType();
+  validateRoomsGuestsNumber();
 };
 
 var runActiveState = function () {
