@@ -13,8 +13,10 @@
   var mapFilters = document.querySelector('.map__filters');
   var mapFiltersContainer = document.querySelector('.map__filters-container');
   var mapPins = document.querySelector('.map__pins');
-  var mapPinsHeight = mapPins.scrollHeight;
-  var mapPinsWidth = mapPins.scrollWidth;
+  var mapPinsHeight = 630;
+  // var mapPinsHeight = mapPins.scrollHeight;
+  var mapPinsWidth = 1170;
+  // var mapPinsWidth = mapPins.scrollWidth;
   var mapPinMain = document.querySelector('.map__pin--main');
 
   var isReceivedData = false;
@@ -42,23 +44,23 @@
     return window.form.adFormAdress.value;
   };
 
-  var getMaxMinAxisCoordinate = function (pinElementCoordinate, pinElementNumber) {
-    switch (pinElementCoordinate) {
-      case 'mapPinMain.style.left': {
-        if (pinElementNumber <= 0) {
-          pinElementNumber = 0;
+  var getMaxMinAxisCoordinate = function (pinCoordinateName, pinElementNumber) {
+    switch (pinCoordinateName) {
+      case 'left': {
+        if (pinElementNumber < 30) {
+          pinElementNumber = 30;
         }
-        if (pinElementNumber > mapPinsWidth) {
-          pinElementNumber = mapPinsWidth;
+        if (pinElementNumber > 1130) {
+          pinElementNumber = 1130;
         }
         break;
       }
-      case 'mapPinMain.style.top': {
-        if (pinElementNumber <= 0) {
-          pinElementNumber = 0;
+      case 'top': {
+        if (pinElementNumber < 130) {
+          pinElementNumber = 130;
         }
-        if (pinElementNumber > mapPinsHeight) {
-          pinElementNumber = mapPinsHeight;
+        if (pinElementNumber > 630) {
+          pinElementNumber = 630;
         }
         break;
       }
@@ -66,19 +68,19 @@
     return pinElementNumber;
   };
 
-  var getPinAxisCoordinate = function (pinElementCoordinate, distanceToPinTip) {
+  var getPinAxisCoordinate = function (pinElementCoordinate, distanceToPinTip, pinCoordinateName) {
     var pinElement = pinElementCoordinate;
     var pxIndex = pinElement.indexOf('px');
-    var pinElementNumber = pinElement.slice(0, pxIndex);
-    var pinElementNumberInRange = getMaxMinAxisCoordinate(pinElementCoordinate, pinElementNumber);
+    var pinElementNumber = parseInt(pinElement.slice(0, pxIndex), DECIMAL_RADIX);
+    var pinElementNumberInRange = getMaxMinAxisCoordinate(pinCoordinateName, pinElementNumber);
     var pinAxisCoordinate = parseInt(pinElementNumberInRange, DECIMAL_RADIX) + distanceToPinTip;
     return pinAxisCoordinate;
   };
 
   var getPinMainAdress = function () {
-    window.form.adFormAdress.value = getPinAxisCoordinate(mapPinMain.style.left, MAP_PIN_MAIN_HALFWIDTH)
-      + ', ' + getPinAxisCoordinate(mapPinMain.style.top, MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TIP_HEIGHT);
-    return window.form.dFormAdress.value;
+    window.form.adFormAdress.value = getPinAxisCoordinate(mapPinMain.style.left, MAP_PIN_MAIN_HALFWIDTH, 'left')
+      + ', ' + getPinAxisCoordinate(mapPinMain.style.top, MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TIP_HEIGHT, 'top');
+    return window.form.adFormAdress.value;
   };
 
   var addListenersToPinsCards = function () {
@@ -127,7 +129,40 @@
 
   runInactiveState();
 
-  mapPinMain.addEventListener('mousedown', function () {
+  mapPinMain.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+      mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
+      mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      getPinMainAdress();
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+
     runActiveState();
     getPinMainAdress();
   });
