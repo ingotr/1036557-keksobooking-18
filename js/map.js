@@ -95,7 +95,7 @@
 
   var runInactiveState = function () {
     mapPinMain.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.util.ENTER_KEYCODE) {
+      if (evt.keyCode === window.util.ENTER) {
         runActiveState();
         getPinMainAdress();
       }

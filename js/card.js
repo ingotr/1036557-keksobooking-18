@@ -72,7 +72,7 @@
   };
 
   var onCardEscPress = function (evt, obj) {
-    if (evt.keyCode === window.util.ESC_KEYCODE) {
+    if (evt.keyCode === window.util.ESC) {
       obj.card.classList.add('hidden');
       document.removeEventListener('keydown', onCardEscPress(obj));
     }
@@ -82,7 +82,7 @@
     obj.pin.addEventListener('click', function () {
       obj.card.classList.remove('hidden');
       document.addEventListener('keydown', function (evt) {
-        if (evt.keyCode === window.util.ESC_KEYCODE) {
+        if (evt.keyCode === window.util.ESC) {
           obj.card.classList.add('hidden');
           document.removeEventListener('keydown', onCardEscPress(obj));
         }
