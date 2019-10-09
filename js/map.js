@@ -3,20 +3,22 @@
 (function () {
 
   var DECIMAL_RADIX = 10;
+  var LIMIT_TOP = 130;
+  var LIMIT_RIGHT = 1210;
+  var LIMIT_BOTTOM = 630;
+  var LIMIT_LEFT = 80;
   var MAP_PIN_MAIN_HALFWIDTH = 33;
   var MAP_PIN_MAIN_HEIGHT = 65;
   var MAP_PIN_MAIN_HALFHEIGHT = 33;
   var MAP_PIN_MAIN_TIP_HEIGHT = 20;
+  var SHIFT_X = 80;
+  var SHIFT_Y = 30;
 
   var advertList = [];
   var mapOfAdvert = document.querySelector('.map');
   var mapFilters = document.querySelector('.map__filters');
   var mapFiltersContainer = document.querySelector('.map__filters-container');
   var mapPins = document.querySelector('.map__pins');
-  var mapPinsHeight = 630;
-  // var mapPinsHeight = mapPins.scrollHeight;
-  var mapPinsWidth = 1170;
-  // var mapPinsWidth = mapPins.scrollWidth;
   var mapPinMain = document.querySelector('.map__pin--main');
 
   var isReceivedData = false;
@@ -44,42 +46,17 @@
     return window.form.adFormAdress.value;
   };
 
-  var getMaxMinAxisCoordinate = function (pinCoordinateName, pinElementNumber) {
-    switch (pinCoordinateName) {
-      case 'left': {
-        if (pinElementNumber < 30) {
-          pinElementNumber = 30;
-        }
-        if (pinElementNumber > 1130) {
-          pinElementNumber = 1130;
-        }
-        break;
-      }
-      case 'top': {
-        if (pinElementNumber < 130) {
-          pinElementNumber = 130;
-        }
-        if (pinElementNumber > 630) {
-          pinElementNumber = 630;
-        }
-        break;
-      }
-    }
-    return pinElementNumber;
-  };
-
-  var getPinAxisCoordinate = function (pinElementCoordinate, distanceToPinTip, pinCoordinateName) {
+  var getPinAxisCoordinate = function (pinElementCoordinate, distanceToPinTip) {
     var pinElement = pinElementCoordinate;
     var pxIndex = pinElement.indexOf('px');
     var pinElementNumber = parseInt(pinElement.slice(0, pxIndex), DECIMAL_RADIX);
-    var pinElementNumberInRange = getMaxMinAxisCoordinate(pinCoordinateName, pinElementNumber);
-    var pinAxisCoordinate = parseInt(pinElementNumberInRange, DECIMAL_RADIX) + distanceToPinTip;
+    var pinAxisCoordinate = parseInt(pinElementNumber, DECIMAL_RADIX) + distanceToPinTip;
     return pinAxisCoordinate;
   };
 
   var getPinMainAdress = function () {
-    window.form.adFormAdress.value = getPinAxisCoordinate(mapPinMain.style.left, MAP_PIN_MAIN_HALFWIDTH, 'left')
-      + ', ' + getPinAxisCoordinate(mapPinMain.style.top, MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TIP_HEIGHT, 'top');
+    window.form.adFormAdress.value = getPinAxisCoordinate(mapPinMain.style.left, MAP_PIN_MAIN_HALFWIDTH)
+      + ', ' + getPinAxisCoordinate(mapPinMain.style.top, MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TIP_HEIGHT);
     return window.form.adFormAdress.value;
   };
 
@@ -132,24 +109,35 @@
   mapPinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
+    var limits = {
+      top: LIMIT_TOP,
+      right: LIMIT_RIGHT,
+      bottom: LIMIT_BOTTOM,
+      left: LIMIT_LEFT,
     };
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
 
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
+      var newLocation = {
+        x: limits.left,
+        y: limits.top,
       };
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
-      mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
-      mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
+
+      if (moveEvt.pageX > limits.right) {
+        newLocation.x = limits.right;
+      } else if (moveEvt.pageX > limits.left) {
+        newLocation.x = moveEvt.pageX;
+      }
+
+      if (moveEvt.pageY > limits.bottom) {
+        newLocation.y = limits.bottom;
+      } else if (moveEvt.pageY > limits.top) {
+        newLocation.y = moveEvt.pageY;
+      }
+
+      mapPinMain.style.top = newLocation.y - SHIFT_Y + 'px';
+      mapPinMain.style.left = newLocation.x - SHIFT_X + 'px';
     };
 
     var onMouseUp = function (upEvt) {
