@@ -4,15 +4,13 @@
 
   var DECIMAL_RADIX = 10;
   var LIMIT_TOP = 130;
-  var LIMIT_RIGHT = 1510;
   var LIMIT_BOTTOM = 630;
-  var LIMIT_LEFT = 380;
   var MAP_PIN_MAIN_HALFWIDTH = 33;
   var MAP_PIN_MAIN_HEIGHT = 65;
   var MAP_PIN_MAIN_HALFHEIGHT = 33;
   var MAP_PIN_MAIN_TIP_HEIGHT = 20;
-  var SHIFT_X = 380;
-  var SHIFT_Y = 30;
+  var SHIFT_X = 100;
+  var SHIFT_Y = 50;
 
   var advertList = [];
   var mapOfAdvert = document.querySelector('.map');
@@ -111,15 +109,16 @@
 
     var limits = {
       top: LIMIT_TOP,
-      right: LIMIT_RIGHT,
+      right: mapPins.offsetWidth + mapPins.offsetLeft - mapPinMain.offsetWidth + SHIFT_X,
       bottom: LIMIT_BOTTOM,
-      left: LIMIT_LEFT,
+      left: mapPins.offsetLeft + SHIFT_X,
     };
 
-    var dragged = true;
+    var dragged = false;
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
+      dragged = true;
 
       if (dragged) {
         var newLocation = {
@@ -138,10 +137,9 @@
         } else if (moveEvt.pageY > limits.top) {
           newLocation.y = moveEvt.pageY;
         }
-
-        mapPinMain.style.top = newLocation.y - SHIFT_Y + 'px';
-        mapPinMain.style.left = newLocation.x - SHIFT_X + 'px';
       }
+      mapPinMain.style.top = newLocation.y - SHIFT_Y + 'px';
+      mapPinMain.style.left = newLocation.x - SHIFT_X + 'px';
     };
 
     var onMouseUp = function (upEvt) {
