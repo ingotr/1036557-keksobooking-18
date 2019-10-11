@@ -9,8 +9,8 @@
   var MAP_PIN_MAIN_HEIGHT = 65;
   var MAP_PIN_MAIN_HALFHEIGHT = 33;
   var MAP_PIN_MAIN_TIP_HEIGHT = 20;
-  var SHIFT_X = 100;
-  var SHIFT_Y = 50;
+  var SHIFT_LIMIT_RIGHT_PROPORTION = 2;
+  var SHIFT_LIMIT_LEFT_PROPORTION = 1.5;
 
   var advertList = [];
   var mapOfAdvert = document.querySelector('.map');
@@ -109,37 +109,44 @@
 
     var limits = {
       top: LIMIT_TOP,
-      right: mapPins.offsetWidth + mapPins.offsetLeft - mapPinMain.offsetWidth + SHIFT_X,
+      right: mapPins.offsetWidth + mapPins.offsetLeft + (mapPinMain.offsetWidth / SHIFT_LIMIT_RIGHT_PROPORTION),
       bottom: LIMIT_BOTTOM,
-      left: mapPins.offsetLeft + SHIFT_X,
+      left: mapPins.offsetLeft + (SHIFT_LIMIT_LEFT_PROPORTION * mapPinMain.offsetWidth),
+    };
+
+    var shiftX = event.clientX - mapPinMain.getBoundingClientRect().left + mapPinMain.offsetWidth;
+    var shiftY = event.clientY - mapPinMain.getBoundingClientRect().top;
+
+    var newLocation = {
+      x: limits.left,
+      y: limits.top,
     };
 
     var dragged = false;
 
+    var move = function (X, Y) {
+      mapPinMain.style.top = Y - shiftY + 'px';
+      mapPinMain.style.left = X - shiftX + 'px';
+    };
+
     var onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
       dragged = true;
 
-      if (dragged) {
-        var newLocation = {
-          x: limits.left,
-          y: limits.top,
-        };
-
-        if (moveEvt.pageX > limits.right) {
-          newLocation.x = limits.right;
-        } else if (moveEvt.pageX > limits.left) {
-          newLocation.x = moveEvt.pageX;
-        }
-
-        if (moveEvt.pageY > limits.bottom) {
-          newLocation.y = limits.bottom;
-        } else if (moveEvt.pageY > limits.top) {
-          newLocation.y = moveEvt.pageY;
-        }
+      if (moveEvt.pageX > limits.right) {
+        newLocation.x = limits.right;
+      } else if (moveEvt.pageX > limits.left) {
+        newLocation.x = moveEvt.pageX;
       }
-      mapPinMain.style.top = newLocation.y - SHIFT_Y + 'px';
-      mapPinMain.style.left = newLocation.x - SHIFT_X + 'px';
+
+      if (moveEvt.pageY > limits.bottom) {
+        newLocation.y = limits.bottom;
+      } else if (moveEvt.pageY > limits.top) {
+        newLocation.y = moveEvt.pageY;
+      }
+
+      if (dragged) {
+        move(newLocation.x, newLocation.y);
+      }
     };
 
     var onMouseUp = function (upEvt) {
