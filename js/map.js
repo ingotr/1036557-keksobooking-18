@@ -9,8 +9,8 @@
   var MAP_PIN_MAIN_HEIGHT = 65;
   var MAP_PIN_MAIN_HALFHEIGHT = 33;
   var MAP_PIN_MAIN_TIP_HEIGHT = 20;
-  var SHIFT_LIMIT_RIGHT_PROPORTION = 2;
-  var SHIFT_LIMIT_LEFT_PROPORTION = 1.5;
+  var SHIFT_LIMIT_RIGHT_PROPORTION = 4.6;
+  var SHIFT_LIMIT_LEFT_PROPORTION = 5.6;
 
   var advertList = [];
   var mapOfAdvert = document.querySelector('.map');
@@ -109,17 +109,17 @@
 
     var limits = {
       top: LIMIT_TOP,
-      right: mapPins.offsetWidth + mapPins.offsetLeft + (mapPinMain.offsetWidth / SHIFT_LIMIT_RIGHT_PROPORTION),
+      right: mapPins.clientWidth + mapPins.offsetLeft + (mapPinMain.offsetWidth * SHIFT_LIMIT_RIGHT_PROPORTION),
       bottom: LIMIT_BOTTOM,
       left: mapPins.offsetLeft + (SHIFT_LIMIT_LEFT_PROPORTION * mapPinMain.offsetWidth),
     };
 
-    var shiftX = event.clientX - mapPinMain.getBoundingClientRect().left + mapPinMain.offsetWidth;
-    var shiftY = event.clientY - mapPinMain.getBoundingClientRect().top;
+    var shiftX = event.clientX - mapPinMain.offsetLeft;
+    var shiftY = event.clientY - mapPinMain.offsetTop;
 
     var newLocation = {
-      x: limits.left,
-      y: limits.top,
+      x: event.clientX,
+      y: event.clientY,
     };
 
     var dragged = false;
@@ -129,19 +129,20 @@
       mapPinMain.style.left = X - shiftX + 'px';
     };
 
-    var onMouseMove = function (moveEvt) {
+    // eslint-disable-next-line no-shadow
+    var onMouseMove = function (evt) {
       dragged = true;
 
-      if (moveEvt.pageX > limits.right) {
+      if (evt.pageX > limits.right) {
         newLocation.x = limits.right;
-      } else if (moveEvt.pageX > limits.left) {
-        newLocation.x = moveEvt.pageX;
+      } else if (evt.pageX > limits.left) {
+        newLocation.x = evt.pageX;
       }
 
-      if (moveEvt.pageY > limits.bottom) {
+      if (evt.pageY > limits.bottom) {
         newLocation.y = limits.bottom;
-      } else if (moveEvt.pageY > limits.top) {
-        newLocation.y = moveEvt.pageY;
+      } else if (evt.pageY > limits.top) {
+        newLocation.y = evt.pageY;
       }
 
       if (dragged) {
