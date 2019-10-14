@@ -33,8 +33,8 @@
   };
 
   var getPinMainAdressInactive = function () {
-    window.form.adFormAdress.value = getPinAxisCoordinate(mapPinMain.style.left, mapPins.offsetWidth / 2)
-      + ', ' + getPinAxisCoordinate(mapPinMain.style.top, mapPins.offsetHeight / 2);
+    window.form.adFormAdress.value = Math.round(getPinAxisCoordinate(mapPinMain.style.left, mapPinMain.offsetWidth / 2))
+      + ', ' + Math.round(getPinAxisCoordinate(mapPinMain.style.top, mapPinMain.offsetHeight / 2));
 
     return window.form.adFormAdress.value;
   };
@@ -48,8 +48,8 @@
   };
 
   var getPinMainAdress = function () {
-    window.form.adFormAdress.value = getPinAxisCoordinate(mapPinMain.style.left, mapPins.offsetWidth / 2)
-      + ', ' + getPinAxisCoordinate(mapPinMain.style.top, mapPins.offsetHeight + MAIN_PIN_TIP_HEIGHT);
+    window.form.adFormAdress.value = Math.round(getPinAxisCoordinate(mapPinMain.style.left, mapPinMain.offsetWidth / 2))
+      + ', ' + Math.round(getPinAxisCoordinate(mapPinMain.style.top, mapPinMain.offsetHeight + MAIN_PIN_TIP_HEIGHT));
     return window.form.adFormAdress.value;
   };
 
