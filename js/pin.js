@@ -14,11 +14,11 @@
     return pinElement;
   };
 
-  var renderPins = function () {
+  var renderPins = function (adverts) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < window.data.adverts.length; i++) {
-      fragment.appendChild(generatePin(window.data.adverts[i]));
+    for (var i = 0; i < adverts.length; i++) {
+      fragment.appendChild(generatePin(adverts[i]));
     }
 
     return fragment;

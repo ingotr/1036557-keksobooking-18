@@ -60,11 +60,11 @@
     return card;
   };
 
-  var renderCards = function () {
+  var renderCards = function (adverts) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < window.data.adverts.length; i++) {
-      fragment.appendChild(generateCard(window.data.adverts[i]));
+    for (var i = 0; i < adverts.length; i++) {
+      fragment.appendChild(generateCard(adverts[i]));
       fragment.children[i].classList.add('hidden');
     }
 

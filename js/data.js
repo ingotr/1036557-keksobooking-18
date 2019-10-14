@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var URL_LOAD = 'https://js.dump.academy/keksobooking/data';
   var DEFAULT_ADVERT_COUNT = 8;
   var ADVERT_ADRESS = '600, 350';
   var ADVERT_CHECKIN = ['12:00', '13:00', '14:00'];
@@ -96,9 +97,28 @@
     createSimilarAdverts(DEFAULT_ADVERT_COUNT);
   };
 
+  var loadHandler = function (data) {
+    adverts = data.slice(0, DEFAULT_ADVERT_COUNT);
+
+    // adverts === window.data.adverts ? console.log("true") : console.log("false");
+    console.log(adverts);
+  };
+
+  var errorHandler = function () {
+    var errorTemplate = document.querySelector('#error').content.querySelector('error');
+    var errorElement = errorTemplate.cloneNode(true);
+    var fragment = document.createDocumentFragment();
+
+    fragment.appendChild(errorElement);
+
+    document.body.insertAdjacentElement('map__pins', fragment);
+  };
+
+  window.backend.load(loadHandler, errorHandler, URL_LOAD);
+  console.log(adverts);
+
   window.data = {
     adverts: adverts,
-    renderMockData: renderMockData,
   };
 
 })();

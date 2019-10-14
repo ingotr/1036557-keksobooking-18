@@ -2,18 +2,19 @@
 
 (function () {
 
+
   var DECIMAL_RADIX = 10;
   var MAIN_PIN_LIMIT_TOP = 130;
   var MAIN_PIN_LIMIT_BOTTOM = 630;
   var MAIN_PIN_TIP_HEIGHT = 20;
 
-  var advertList = [];
   var mapOfAdvert = document.querySelector('.map');
   var mapFilters = document.querySelector('.map__filters');
   var mapFiltersContainer = document.querySelector('.map__filters-container');
   var mapPins = document.querySelector('.map__pins');
   var mapPinMain = document.querySelector('.map__pin--main');
 
+  var advertList = [];
   var isReceivedData = false;
 
   function AdvertElement(pin, card) {
@@ -53,14 +54,13 @@
     return window.form.adFormAdress.value;
   };
 
-  var addListenersToPinsCards = function () {
-    var pinsList = window.pin.renderPins();
-    var cardList = window.card.renderCards();
+  var addListenersToPinsCards = function (adverts) {
+    var pinsList = window.pin.renderPins(adverts);
+    var cardList = window.card.renderCards(adverts);
 
-    for (var i = 0; i < window.data.adverts.length; i++) {
+    for (var i = 0; i < adverts.length; i++) {
       advertList[i] = new AdvertElement(pinsList.children[i], cardList.children[i]);
     }
-
     mapPins.appendChild(pinsList);
     mapOfAdvert.insertBefore(cardList, mapFiltersContainer);
   };
@@ -88,9 +88,12 @@
     mapFilters.removeAttribute('disabled');
 
     if (!isReceivedData) {
-      window.data.renderMockData();
+      // window.data.renderMockData();
+      // window.pin.renderPins();
+      // window.card.renderCards();
 
-      addListenersToPinsCards();
+      // console.log(window.data.adverts);
+      addListenersToPinsCards(window.data.adverts);
       isReceivedData = true;
     }
 
