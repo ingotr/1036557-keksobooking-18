@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-
-
   var DECIMAL_RADIX = 10;
   var MAIN_PIN_LIMIT_TOP = 130;
   var MAIN_PIN_LIMIT_BOTTOM = 630;
@@ -13,17 +11,9 @@
   var mapFiltersContainer = document.querySelector('.map__filters-container');
   var mapPins = document.querySelector('.map__pins');
   var mapPinMain = document.querySelector('.map__pin--main');
+  var main = mapOfAdvert.parentNode;
 
-  var advertList = [];
   var isReceivedData = false;
-
-  function AdvertElement(pin, card) {
-    this.pin = pin;
-    this.card = card;
-
-    window.card.openCard(this);
-    window.card.closeCard(this);
-  }
 
   var disableMapFilters = function () {
     mapFilters.setAttribute('disabled', 'disabled');
@@ -54,17 +44,6 @@
     return window.form.adFormAdress.value;
   };
 
-  var addListenersToPinsCards = function (adverts) {
-    var pinsList = window.pin.renderPins(adverts);
-    var cardList = window.card.renderCards(adverts);
-
-    for (var i = 0; i < adverts.length; i++) {
-      advertList[i] = new AdvertElement(pinsList.children[i], cardList.children[i]);
-    }
-    mapPins.appendChild(pinsList);
-    mapOfAdvert.insertBefore(cardList, mapFiltersContainer);
-  };
-
   var runInactiveState = function () {
     mapPinMain.addEventListener('keydown', function (evt) {
       if (evt.keyCode === window.util.ENTER) {
@@ -88,12 +67,7 @@
     mapFilters.removeAttribute('disabled');
 
     if (!isReceivedData) {
-      // window.data.renderMockData();
-      // window.pin.renderPins();
-      // window.card.renderCards();
-
-      // console.log(window.data.adverts);
-      addListenersToPinsCards(window.data.adverts);
+      window.backend.load(window.data.loadHandler, window.data.errorHandler, window.data.URL);
       isReceivedData = true;
     }
 
@@ -175,5 +149,12 @@
     runActiveState();
     getPinMainAdress();
   });
+
+  window.map = {
+    main: main,
+    mapOfAdvert: mapOfAdvert,
+    mapPins: mapPins,
+    mapFiltersContainer: mapFiltersContainer,
+  };
 
 })();

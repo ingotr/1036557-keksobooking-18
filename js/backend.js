@@ -3,6 +3,7 @@
 (function () {
   var REQUEST_STATUS_OK = 200;
   var XHR_TIMEOUT = 10000;
+  var logErrors;
 
   var commonRequest = function (onLoad, onError, requestType, URL, data) {
     var xhr = new XMLHttpRequest();
@@ -32,16 +33,13 @@
     }
   };
 
-  var load = function (onLoad, onError, URL) {
-    commonRequest(onLoad, onError, 'GET', URL);
-  };
-
-  var save = function (data, onLoad, onError, URL) {
-    commonRequest(onLoad, onError, 'POST', URL, data);
-  };
-
   window.backend = {
-    load: load,
-    save: save,
+    load: function (onLoad, onError, URL) {
+      commonRequest(onLoad, onError, 'GET', URL);
+    },
+    save: function (data, onLoad, onError, URL) {
+      commonRequest(onLoad, onError, 'POST', URL, data);
+    },
+    logErrors: logErrors,
   };
 })();

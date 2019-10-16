@@ -60,17 +60,6 @@
     return card;
   };
 
-  var renderCards = function (adverts) {
-    var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < adverts.length; i++) {
-      fragment.appendChild(generateCard(adverts[i]));
-      fragment.children[i].classList.add('hidden');
-    }
-
-    return fragment;
-  };
-
   var onCardEscPress = function (evt, obj) {
     if (evt.keyCode === window.util.ESC) {
       obj.card.classList.add('hidden');
@@ -78,31 +67,33 @@
     }
   };
 
-  var openCard = function (obj) {
-    obj.pin.addEventListener('click', function () {
-      obj.card.classList.remove('hidden');
-      document.addEventListener('keydown', function (evt) {
-        if (evt.keyCode === window.util.ESC) {
-          obj.card.classList.add('hidden');
-          document.removeEventListener('keydown', onCardEscPress(obj));
-        }
-      });
-    });
-  };
-
-  var closeCard = function (obj) {
-    obj.closeButton = obj.card.querySelector('.popup__close');
-    obj.closeButton.addEventListener('click', function () {
-      obj.card.classList.add('hidden');
-      document.removeEventListener('keydown', onCardEscPress(obj));
-    });
-  };
-
   window.card = {
-    generateCard: generateCard,
-    renderCards: renderCards,
-    openCard: openCard,
-    closeCard: closeCard,
+    renderCards: function (adverts) {
+      var fragment = document.createDocumentFragment();
+      for (var i = 0; i < adverts.length; i++) {
+        fragment.appendChild(generateCard(adverts[i]));
+        fragment.children[i].classList.add('hidden');
+      }
+      return fragment;
+    },
+    openCard: function (obj) {
+      obj.pin.addEventListener('click', function () {
+        obj.card.classList.remove('hidden');
+        document.addEventListener('keydown', function (evt) {
+          if (evt.keyCode === window.util.ESC) {
+            obj.card.classList.add('hidden');
+            document.removeEventListener('keydown', onCardEscPress(obj));
+          }
+        });
+      });
+    },
+    closeCard: function (obj) {
+      obj.closeButton = obj.card.querySelector('.popup__close');
+      obj.closeButton.addEventListener('click', function () {
+        obj.card.classList.add('hidden');
+        document.removeEventListener('keydown', onCardEscPress(obj));
+      });
+    },
   };
 
 })();
