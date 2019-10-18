@@ -36,7 +36,7 @@
     load: function (onLoad, onError, URL) {
       commonRequest(onLoad, onError, 'GET', URL);
     },
-    save: function (data, onLoad, onError, URL) {
+    save: function (onLoad, onError, URL, data) {
       commonRequest(onLoad, onError, 'POST', URL, data);
     },
   };

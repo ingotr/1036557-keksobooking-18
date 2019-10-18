@@ -47,6 +47,16 @@
       errorButton.addEventListener('click', function () {
         errorElement.classList.add('hidden');
       });
+
+      document.addEventListener('keydown', function (evt) {
+        if (evt.keyCode === window.util.ESC) {
+          errorElement.classList.add('hidden');
+        }
+      });
+
+      document.addEventListener('click', function () {
+        errorElement.classList.add('hidden');
+      });
     },
   };
 

@@ -35,15 +35,44 @@
     },
   };
 
+  var FORM_DEFAULT_VALUES = {
+    title: '',
+    guestNumbers: 3,
+    timein: '12:00',
+    timeout: '12:00',
+    price: '',
+    type: 'flat',
+    description: '',
+  };
+
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
   var adFormAdress = adForm.querySelector('#address');
+  var adFormTitleElement = adForm.querySelector('#title');
   var selectRoomsElement = adForm.querySelector('#room_number');
   var selectGuestsElement = adForm.querySelector('#capacity');
   var selectTimein = adForm.querySelector('#timein');
   var selectTimeout = adForm.querySelector('#timeout');
   var selectType = adForm.querySelector('#type');
   var numberPrice = adForm.querySelector('#price');
+  var adFormDescriptionElement = adForm.querySelector('#description');
+  var features = adForm.querySelector('.features');
+  var adFormFeaturesElement = features.querySelectorAll('.feature__checkbox');
+
+  var returnDefaultFormSettings = function () {
+    adFormTitleElement.value = FORM_DEFAULT_VALUES.title;
+    selectGuestsElement.value = FORM_DEFAULT_VALUES.guestNumbers;
+    selectTimein.value = FORM_DEFAULT_VALUES.timein;
+    selectTimeout.value = FORM_DEFAULT_VALUES.timeout;
+    numberPrice.value = FORM_DEFAULT_VALUES.price;
+    selectType.value = FORM_DEFAULT_VALUES.type;
+    adFormDescriptionElement.value = FORM_DEFAULT_VALUES.description;
+
+    for (var i = 0; i < adFormFeaturesElement.length; i++) {
+      adFormFeaturesElement[i].checked = false;
+    }
+    getPriceByType();
+  };
 
   var disableAdFormElements = function () {
     adForm.classList.add('ad-form--disabled');
@@ -89,6 +118,40 @@
   selectTimeout.addEventListener('change', synchronizeTimeout);
   selectRoomsElement.addEventListener('change', validateRoomsGuestsNumber);
   selectGuestsElement.addEventListener('change', validateRoomsGuestsNumber);
+
+
+  var URL_SAVE = 'https://js.dump.academy/keksobooking';
+
+  var getSuccessMessage = function () {
+    var successTemplate = document.querySelector('#success').content.querySelector('.success');
+    var successElement = successTemplate.cloneNode(true);
+    var fragment = document.createDocumentFragment();
+
+    fragment.appendChild(successElement);
+
+    window.map.main.appendChild(fragment);
+
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.util.ESC) {
+        successElement.classList.add('hidden');
+      }
+    });
+
+    document.addEventListener('click', function () {
+      successElement.classList.add('hidden');
+    });
+  };
+
+  adForm.addEventListener('submit', function (evt) {
+    window.backend.save(function () {
+      window.map.runInactiveState();
+      window.map.removeCardElement();
+      returnDefaultFormSettings();
+
+      getSuccessMessage();
+    }, window.data.errorHandler, URL_SAVE, new FormData(adForm));
+    evt.preventDefault();
+  });
 
   window.form = {
     adForm: adForm,
