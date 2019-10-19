@@ -145,7 +145,7 @@
   adForm.addEventListener('submit', function (evt) {
     window.backend.save(function () {
       window.map.runInactiveState();
-      window.map.removeCardElement();
+      window.map.removeCardPinElements();
       returnDefaultFormSettings();
 
       getSuccessMessage();

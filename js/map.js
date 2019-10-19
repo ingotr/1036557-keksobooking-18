@@ -52,33 +52,6 @@
     mapPinMain.style.left = MAIN_PIN_DEFAULT_LEFT - (mapPinMain.offsetWidth / 2) + 'px';
   };
 
-  var removeCardElement = function () {
-    var cardElement = mapOfAdvert.querySelectorAll('.map__card');
-    var pinElement = mapPins.querySelectorAll('button[type=button]');
-    for (var i = 0; i < cardElement.length; i++) {
-      mapOfAdvert.removeChild(cardElement[i]);
-    }
-    for (i = 0; i < pinElement.length; i++) {
-      mapPins.removeChild(pinElement[i]);
-    }
-  };
-
-  var runInactiveState = function () {
-    isReceivedData = false;
-    mapPinMain.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.util.ENTER) {
-        runActiveState();
-        getPinMainAdress();
-      }
-    });
-    window.form.disableAdFormElements();
-    disableMapFilters();
-    getPinMainDefaultAdress();
-    getPinMainAdressInactive();
-    window.form.getPriceByType();
-    window.form.validateRoomsGuestsNumber();
-  };
-
   var runActiveState = function () {
     for (var i = 0; i < window.form.adFormFieldsets.length; i++) {
       window.form.adFormFieldsets[i].removeAttribute('disabled');
@@ -95,7 +68,7 @@
     showMap();
   };
 
-  runInactiveState();
+  window.map.runInactiveState();
 
   mapPinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -176,8 +149,31 @@
     mapOfAdvert: mapOfAdvert,
     mapPins: mapPins,
     mapFiltersContainer: mapFiltersContainer,
-    runInactiveState: runInactiveState,
-    removeCardElement: removeCardElement,
+    runInactiveState: function () {
+      isReceivedData = false;
+      mapPinMain.addEventListener('keydown', function (evt) {
+        if (evt.keyCode === window.util.ENTER) {
+          runActiveState();
+          getPinMainAdress();
+        }
+      });
+      window.form.disableAdFormElements();
+      disableMapFilters();
+      getPinMainDefaultAdress();
+      getPinMainAdressInactive();
+      window.form.getPriceByType();
+      window.form.validateRoomsGuestsNumber();
+    },
+    removeCardPinElements: function () {
+      var cardElement = mapOfAdvert.querySelectorAll('.map__card');
+      var pinElement = mapPins.querySelectorAll('button[type=button]');
+      for (var i = 0; i < cardElement.length; i++) {
+        mapOfAdvert.removeChild(cardElement[i]);
+      }
+      for (i = 0; i < pinElement.length; i++) {
+        mapPins.removeChild(pinElement[i]);
+      }
+    },
   };
 
 })();
