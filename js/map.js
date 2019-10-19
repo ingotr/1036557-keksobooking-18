@@ -68,7 +68,23 @@
     showMap();
   };
 
-  window.map.runInactiveState();
+  var runInactiveState = function () {
+    isReceivedData = false;
+    mapPinMain.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.util.ENTER) {
+        runActiveState();
+        getPinMainAdress();
+      }
+    });
+    window.form.disableAdFormElements();
+    disableMapFilters();
+    getPinMainDefaultAdress();
+    getPinMainAdressInactive();
+    window.form.getPriceByType();
+    window.form.validateRoomsGuestsNumber();
+  }
+
+  runInactiveState();
 
   mapPinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -149,21 +165,7 @@
     mapOfAdvert: mapOfAdvert,
     mapPins: mapPins,
     mapFiltersContainer: mapFiltersContainer,
-    runInactiveState: function () {
-      isReceivedData = false;
-      mapPinMain.addEventListener('keydown', function (evt) {
-        if (evt.keyCode === window.util.ENTER) {
-          runActiveState();
-          getPinMainAdress();
-        }
-      });
-      window.form.disableAdFormElements();
-      disableMapFilters();
-      getPinMainDefaultAdress();
-      getPinMainAdressInactive();
-      window.form.getPriceByType();
-      window.form.validateRoomsGuestsNumber();
-    },
+    runInactiveState: runInactiveState,
     removeCardPinElements: function () {
       var cardElement = mapOfAdvert.querySelectorAll('.map__card');
       var pinElement = mapPins.querySelectorAll('button[type=button]');
