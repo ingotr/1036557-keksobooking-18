@@ -82,7 +82,7 @@
     getPinMainAdressInactive();
     window.form.getPriceByType();
     window.form.validateRoomsGuestsNumber();
-  }
+  };
 
   runInactiveState();
 
