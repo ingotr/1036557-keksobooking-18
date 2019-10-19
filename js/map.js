@@ -2,6 +2,8 @@
 
 (function () {
   var DECIMAL_RADIX = 10;
+  var MAIN_PIN_DEFAULT_LEFT = 603;
+  var MAIN_PIN_DEFAULT_TOP = 408;
   var MAIN_PIN_LIMIT_TOP = 130;
   var MAIN_PIN_LIMIT_BOTTOM = 630;
   var MAIN_PIN_TIP_HEIGHT = 20;
@@ -16,6 +18,7 @@
   var isReceivedData = false;
 
   var disableMapFilters = function () {
+    mapOfAdvert.classList.add('map--faded');
     mapFilters.setAttribute('disabled', 'disabled');
   };
 
@@ -44,18 +47,9 @@
     return window.form.adFormAdress.value;
   };
 
-  var runInactiveState = function () {
-    mapPinMain.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.util.ENTER) {
-        runActiveState();
-        getPinMainAdress();
-      }
-    });
-    window.form.disableAdFormElements();
-    disableMapFilters();
-    getPinMainAdressInactive();
-    window.form.getPriceByType();
-    window.form.validateRoomsGuestsNumber();
+  var getPinMainDefaultAdress = function () {
+    mapPinMain.style.top = MAIN_PIN_DEFAULT_TOP - (mapPinMain.offsetWidth / 2) + 'px';
+    mapPinMain.style.left = MAIN_PIN_DEFAULT_LEFT - (mapPinMain.offsetWidth / 2) + 'px';
   };
 
   var runActiveState = function () {
@@ -72,6 +66,22 @@
     }
 
     showMap();
+  };
+
+  var runInactiveState = function () {
+    isReceivedData = false;
+    mapPinMain.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.util.ENTER) {
+        runActiveState();
+        getPinMainAdress();
+      }
+    });
+    window.form.disableAdFormElements();
+    disableMapFilters();
+    getPinMainDefaultAdress();
+    getPinMainAdressInactive();
+    window.form.getPriceByType();
+    window.form.validateRoomsGuestsNumber();
   };
 
   runInactiveState();
@@ -155,6 +165,17 @@
     mapOfAdvert: mapOfAdvert,
     mapPins: mapPins,
     mapFiltersContainer: mapFiltersContainer,
+    runInactiveState: runInactiveState,
+    removeCardPinElements: function () {
+      var cardElement = mapOfAdvert.querySelectorAll('.map__card');
+      var pinElement = mapPins.querySelectorAll('button[type=button]');
+      for (var i = 0; i < cardElement.length; i++) {
+        mapOfAdvert.removeChild(cardElement[i]);
+      }
+      for (i = 0; i < pinElement.length; i++) {
+        mapPins.removeChild(pinElement[i]);
+      }
+    },
   };
 
 })();
