@@ -7,10 +7,11 @@
   var commonRequest = function (onLoad, onError, requestType, URL, data) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
+    var test;
 
     xhr.addEventListener('load', function () {
       if (xhr.status === REQUEST_STATUS_OK) {
-        onLoad(xhr.response);
+        test = onLoad(xhr.response);
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
@@ -30,11 +31,13 @@
     } else {
       xhr.send();
     }
+    return test;
   };
 
   window.backend = {
     load: function (onLoad, onError, URL) {
-      commonRequest(onLoad, onError, 'GET', URL);
+      var test = commonRequest(onLoad, onError, 'GET', URL);
+      return test;
     },
     save: function (onLoad, onError, URL, data) {
       commonRequest(onLoad, onError, 'POST', URL, data);

@@ -27,12 +27,13 @@
   };
 
   window.data = {
+    DEFAULT_ADVERT_COUNT: DEFAULT_ADVERT_COUNT,
     URL: 'https://js.dump.academy/keksobooking/data',
     adverts: [],
     loadHandler: function (data) {
       adverts = data.slice(0, DEFAULT_ADVERT_COUNT);
-
       addListenersToPinsCards(adverts);
+      return adverts;
     },
     errorHandler: function () {
       var errorTemplate = document.querySelector('#error').content.querySelector('.error');
