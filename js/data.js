@@ -6,9 +6,11 @@
   var adverts = [];
   var advertList = [];
 
-  function AdvertElement(pin, card) {
+  // eslint-disable-next-line no-shadow
+  function AdvertElement(pin, card, adverts) {
     this.pin = pin;
     this.card = card;
+    this.advert = adverts;
 
     window.card.openCard(this);
     window.card.closeCard(this);
@@ -20,10 +22,13 @@
     var cardList = window.card.renderCards(adverts);
 
     for (var i = 0; i < adverts.length; i++) {
-      advertList[i] = new AdvertElement(pinsList.children[i], cardList.children[i]);
+      advertList[i] = new AdvertElement(pinsList.children[i], cardList.children[i], adverts[i]);
     }
+    window.filter.hidePins(advertList);
+    window.filter.getFirstFiveAdverts(advertList);
     window.map.mapPins.appendChild(pinsList);
     window.map.mapOfAdvert.insertBefore(cardList, window.map.mapFiltersContainer);
+    return advertList;
   };
 
   window.data = {
@@ -32,8 +37,8 @@
     adverts: [],
     loadHandler: function (data) {
       adverts = data.slice(0, DEFAULT_ADVERT_COUNT);
-      addListenersToPinsCards(adverts);
-      return adverts;
+      advertList = addListenersToPinsCards(adverts);
+      window.filter.getMapFilters(advertList);
     },
     errorHandler: function () {
       var errorTemplate = document.querySelector('#error').content.querySelector('.error');

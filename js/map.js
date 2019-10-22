@@ -61,13 +61,11 @@
     mapFilters.removeAttribute('disabled');
 
     if (!isReceivedData) {
-      var test = window.backend.load(window.data.loadHandler, window.data.errorHandler, window.data.URL);
+      window.backend.load(window.data.loadHandler, window.data.errorHandler, window.data.URL);
       isReceivedData = true;
-      console.log(test);
     }
 
     showMap();
-    window.filter.getMapFilters();
   };
 
   var runInactiveState = function () {

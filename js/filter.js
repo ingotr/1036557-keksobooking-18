@@ -1,38 +1,41 @@
 'use strict';
 
 (function () {
-  function AdvertElement(pin, card) {
-    this.pin = pin;
-    this.card = card;
-
-    window.card.openCard(this);
-    window.card.closeCard(this);
-  }
-
-  var adverts = [];
-  var advertList = [];
+  var showPins = function (sameTypeAdverts) {
+    for (var i = 0; i < sameTypeAdverts.length; i++) {
+      sameTypeAdverts[i].pin.classList.remove('hidden');
+    }
+  };
+  var getSameTypeAdvert = function (advertList, evt) {
+    var sameTypeAdverts = advertList.filter(function (it) {
+      if (evt.target.value === 'any') {
+        return it.advert.offer.type;
+      }
+      return it.advert.offer.type === evt.target.value;
+    });
+    sameTypeAdverts = sameTypeAdverts.slice(0, window.util.DEFAULT_PINS_NUMBER);
+    return sameTypeAdverts;
+  };
 
   window.filter = {
-    getMapFilters: function () {
+    getFirstFiveAdverts: function (advertList) {
+      for (var i = 0; i < window.util.DEFAULT_PINS_NUMBER; i++) {
+        advertList[i].pin.classList.remove('hidden');
+      }
+    },
+    getMapFilters: function (advertList) {
       var mapFilterContainer = window.map.mapOfAdvert.querySelector('.map__filters-container');
       var typeFilter = mapFilterContainer.querySelector('#housing-type');
+
       typeFilter.addEventListener('change', function (evt) {
-        window.filter.getAdvertElements();
-        console.log(evt.target.value);
-        window.backend.load(window.data.loadHandler, window.data.errorHandler, window.data.URL);
-        if (evt.target.value === adverts[0].offer.type) {
-          console.log('Совпадает с фильтром');
-        }
+        window.filter.hidePins(advertList);
+        showPins(getSameTypeAdvert(advertList, evt));
       });
     },
-    getAdvertElements: function () {
-      var pinsList = window.map.mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
-      var cardsList = window.map.mapOfAdvert.querySelectorAll('.map__card');
-      for (var i = 0; i < pinsList.length; i++) {
-        advertList[i] = new AdvertElement(pinsList[i], cardsList[i]);
+    hidePins: function (advertList) {
+      for (var i = 0; i < advertList.length; i++) {
+        advertList[i].pin.classList.add('hidden');
       }
-      console.log(advertList);
-      return advertList;
     },
   };
 })();
