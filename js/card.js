@@ -78,6 +78,7 @@
     },
     openCard: function (obj) {
       obj.pin.addEventListener('click', function () {
+        window.filter.hideCards(obj.advertList);
         obj.card.classList.remove('hidden');
         document.addEventListener('keydown', function (evt) {
           if (evt.keyCode === window.util.ESC) {

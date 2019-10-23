@@ -37,5 +37,10 @@
         advertList[i].pin.classList.add('hidden');
       }
     },
+    hideCards: function (advertList) {
+      for (var i = 0; i < advertList.length; i++) {
+        advertList[i].card.classList.add('hidden');
+      }
+    },
   };
 })();

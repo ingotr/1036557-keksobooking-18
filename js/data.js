@@ -6,10 +6,11 @@
   var adverts = [];
   var advertList = [];
 
-  function AdvertElement(pin, card, advertData) {
+  function AdvertElement(pin, card, advertData, advertDataList) {
     this.pin = pin;
     this.card = card;
     this.advert = advertData;
+    this.advertList = advertDataList;
 
     window.card.openCard(this);
     window.card.closeCard(this);
@@ -20,7 +21,7 @@
     var cardList = window.card.renderCards(advertData);
 
     for (var i = 0; i < adverts.length; i++) {
-      advertList[i] = new AdvertElement(pinsList.children[i], cardList.children[i], adverts[i]);
+      advertList[i] = new AdvertElement(pinsList.children[i], cardList.children[i], adverts[i], advertList);
     }
     window.filter.hidePins(advertList);
     window.filter.getFirstFiveAdverts(advertList);
