@@ -7,11 +7,10 @@
   var commonRequest = function (onLoad, onError, requestType, URL, data) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
-    var test;
 
     xhr.addEventListener('load', function () {
       if (xhr.status === REQUEST_STATUS_OK) {
-        test = onLoad(xhr.response);
+        onLoad(xhr.response);
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
@@ -31,7 +30,6 @@
     } else {
       xhr.send();
     }
-    return test;
   };
 
   window.backend = {

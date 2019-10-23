@@ -6,20 +6,18 @@
   var adverts = [];
   var advertList = [];
 
-  // eslint-disable-next-line no-shadow
-  function AdvertElement(pin, card, adverts) {
+  function AdvertElement(pin, card, advertData) {
     this.pin = pin;
     this.card = card;
-    this.advert = adverts;
+    this.advert = advertData;
 
     window.card.openCard(this);
     window.card.closeCard(this);
   }
 
-  // eslint-disable-next-line no-shadow
-  var addListenersToPinsCards = function (adverts) {
-    var pinsList = window.pin.renderPins(adverts);
-    var cardList = window.card.renderCards(adverts);
+  var addListenersToPinsCards = function (advertData) {
+    var pinsList = window.pin.renderPins(advertData);
+    var cardList = window.card.renderCards(advertData);
 
     for (var i = 0; i < adverts.length; i++) {
       advertList[i] = new AdvertElement(pinsList.children[i], cardList.children[i], adverts[i]);
