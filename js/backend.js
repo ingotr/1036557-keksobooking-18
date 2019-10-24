@@ -34,8 +34,7 @@
 
   window.backend = {
     load: function (onLoad, onError, URL) {
-      var test = commonRequest(onLoad, onError, 'GET', URL);
-      return test;
+      commonRequest(onLoad, onError, 'GET', URL);
     },
     save: function (onLoad, onError, URL, data) {
       commonRequest(onLoad, onError, 'POST', URL, data);
