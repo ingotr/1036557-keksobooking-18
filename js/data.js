@@ -23,10 +23,6 @@
     for (var i = 0; i < adverts.length; i++) {
       advertList[i] = new AdvertElement(pinsList.children[i], cardList.children[i], adverts[i], advertList);
     }
-    window.filter.hidePins(advertList);
-    window.filter.getFirstFiveAdverts(advertList);
-    window.map.mapPins.appendChild(pinsList);
-    window.map.mapOfAdvert.insertBefore(cardList, window.map.mapFiltersContainer);
     return advertList;
   };
 

@@ -78,7 +78,7 @@
     },
     openCard: function (obj) {
       obj.pin.addEventListener('click', function () {
-        window.filter.hideCards(obj.advertList);
+        window.card.hideCards(obj.advertList);
         obj.card.classList.remove('hidden');
         document.addEventListener('keydown', function (evt) {
           if (evt.keyCode === window.util.ESC) {
@@ -94,6 +94,21 @@
         obj.card.classList.add('hidden');
         document.removeEventListener('keydown', onCardEscPress(obj));
       });
+    },
+    hideCards: function (advertList) {
+      for (var i = 0; i < advertList.length; i++) {
+        advertList[i].card.classList.add('hidden');
+      }
+    },
+    showCards: function (sameTypeAdverts) {
+      for (var i = 0; i < sameTypeAdverts.length; i++) {
+        window.map.mapOfAdvert.insertBefore(sameTypeAdverts[i].card, window.map.mapFiltersContainer);
+      }
+    },
+    removeCards: function (currentCards) {
+      for (var i = 0; i < currentCards.length; i++) {
+        window.map.mapOfAdvert.removeChild(currentCards[i]);
+      }
     },
   };
 

@@ -1,11 +1,6 @@
 'use strict';
 
 (function () {
-  var showPins = function (sameTypeAdverts) {
-    for (var i = 0; i < sameTypeAdverts.length; i++) {
-      sameTypeAdverts[i].pin.classList.remove('hidden');
-    }
-  };
   var getSameTypeAdvert = function (advertList, evt) {
     var sameTypeAdverts = advertList.filter(function (it) {
       if (evt.target.value === 'any') {
@@ -18,29 +13,25 @@
   };
 
   window.filter = {
-    getFirstFiveAdverts: function (advertList) {
-      for (var i = 0; i < window.util.DEFAULT_PINS_NUMBER; i++) {
-        advertList[i].pin.classList.remove('hidden');
-      }
-    },
     getMapFilters: function (advertList) {
       var mapFilterContainer = window.map.mapOfAdvert.querySelector('.map__filters-container');
       var typeFilter = mapFilterContainer.querySelector('#housing-type');
+      var currentPins = window.map.mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+      var currentCards = window.map.mapOfAdvert.querySelectorAll('.map__card');
 
       typeFilter.addEventListener('change', function (evt) {
-        window.filter.hidePins(advertList);
-        showPins(getSameTypeAdvert(advertList, evt));
+        currentPins = window.map.mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+        currentCards = window.map.mapOfAdvert.querySelectorAll('.map__card');
+
+        if (currentCards.length > 0) {
+          window.card.removeCards(currentCards);
+        }
+        if (currentPins.length > 0) {
+          window.pin.removePins(currentPins);
+        }
+        window.pin.showPins(getSameTypeAdvert(advertList, evt));
+        window.card.showCards(getSameTypeAdvert(advertList, evt));
       });
-    },
-    hidePins: function (advertList) {
-      for (var i = 0; i < advertList.length; i++) {
-        advertList[i].pin.classList.add('hidden');
-      }
-    },
-    hideCards: function (advertList) {
-      for (var i = 0; i < advertList.length; i++) {
-        advertList[i].card.classList.add('hidden');
-      }
     },
   };
 })();

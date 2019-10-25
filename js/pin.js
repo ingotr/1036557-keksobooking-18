@@ -22,6 +22,17 @@
       }
       return fragment;
     },
+    showPins: function (sameTypeAdverts) {
+      for (var i = 0; i < sameTypeAdverts.length; i++) {
+        window.map.mapPins.appendChild(sameTypeAdverts[i].pin);
+        sameTypeAdverts[i].pin.classList.remove('hidden');
+      }
+    },
+    removePins: function (currentPins) {
+      for (var i = 0; i < currentPins.length; i++) {
+        window.map.mapPins.removeChild(currentPins[i]);
+      }
+    },
   };
 
 })();
