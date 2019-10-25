@@ -100,6 +100,11 @@
         advertList[i].card.classList.add('hidden');
       }
     },
+    hideCurrentCards: function (currentCards) {
+      for (var i = 0; i < currentCards.length; i++) {
+        currentCards[i].classList.add('hidden');
+      }
+    },
     showCards: function (sameTypeAdverts) {
       for (var i = 0; i < sameTypeAdverts.length; i++) {
         window.map.mapOfAdvert.insertBefore(sameTypeAdverts[i].card, window.map.mapFiltersContainer);

@@ -24,6 +24,7 @@
         currentCards = window.map.mapOfAdvert.querySelectorAll('.map__card');
 
         if (currentCards.length > 0) {
+          window.card.hideCurrentCards(currentCards);
           window.card.removeCards(currentCards);
         }
         if (currentPins.length > 0) {
