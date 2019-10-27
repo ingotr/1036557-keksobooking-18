@@ -22,10 +22,10 @@
       }
       return fragment;
     },
-    showPins: function (sameTypeAdverts) {
-      for (var i = 0; i < sameTypeAdverts.length; i++) {
-        window.map.mapPins.appendChild(sameTypeAdverts[i].pin);
-        sameTypeAdverts[i].pin.classList.remove('hidden');
+    showPins: function (adverts) {
+      for (var i = 0; i < adverts.length; i++) {
+        window.map.mapPins.appendChild(adverts[i].pin);
+        adverts[i].pin.classList.remove('hidden');
       }
     },
     removePins: function (currentPins) {

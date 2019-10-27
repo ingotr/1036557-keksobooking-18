@@ -23,7 +23,15 @@
     for (var i = 0; i < adverts.length; i++) {
       advertList[i] = new AdvertElement(pinsList.children[i], cardList.children[i], adverts[i], advertList);
     }
+    getFirstFiveAdverts(advertList);
     return advertList;
+  };
+
+  var getFirstFiveAdverts = function (pinList) {
+    for (var i = 0; i < window.util.DEFAULT_PINS_NUMBER; i++) {
+      window.map.mapPins.appendChild(pinList[i].pin);
+      pinList[i].pin.classList.remove('hidden');
+    }
   };
 
   window.data = {
