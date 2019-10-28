@@ -16,6 +16,14 @@
     window.card.closeCard(this);
   }
 
+  var getFirstFiveAdverts = function (pinList) {
+    for (var i = 0; i < window.util.DEFAULT_PINS_NUMBER; i++) {
+      window.map.mapPins.appendChild(pinList[i].pin);
+      pinList[i].pin.classList.remove('hidden');
+      window.map.mapOfAdvert.insertBefore(pinList[i].card, window.map.mapFiltersContainer);
+    }
+  };
+
   var addListenersToPinsCards = function (advertData) {
     var pinsList = window.pin.renderPins(advertData);
     var cardList = window.card.renderCards(advertData);
@@ -25,13 +33,6 @@
     }
     getFirstFiveAdverts(advertList);
     return advertList;
-  };
-
-  var getFirstFiveAdverts = function (pinList) {
-    for (var i = 0; i < window.util.DEFAULT_PINS_NUMBER; i++) {
-      window.map.mapPins.appendChild(pinList[i].pin);
-      pinList[i].pin.classList.remove('hidden');
-    }
   };
 
   window.data = {
