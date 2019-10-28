@@ -16,22 +16,11 @@
     getMapFilters: function (advertList) {
       var mapFilterContainer = window.map.mapOfAdvert.querySelector('.map__filters-container');
       var typeFilter = mapFilterContainer.querySelector('#housing-type');
-      var currentPins = window.map.mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
-      var currentCards = window.map.mapOfAdvert.querySelectorAll('.map__card');
 
       typeFilter.addEventListener('change', function (evt) {
-        currentPins = window.map.mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
-        currentCards = window.map.mapOfAdvert.querySelectorAll('.map__card');
-
-        if (currentCards.length > 0) {
-          window.card.hideCurrentCards(currentCards);
-          window.card.removeCards(currentCards);
-        }
-        if (currentPins.length > 0) {
-          window.pin.removePins(currentPins);
-        }
-        window.pin.showPins(getSameTypeAdvert(advertList, evt));
-        window.card.showCards(getSameTypeAdvert(advertList, evt));
+        window.card.removeCurrent();
+        window.pin.removeCurrent();
+        window.pin.show(getSameTypeAdvert(advertList, evt));
       });
     },
   };

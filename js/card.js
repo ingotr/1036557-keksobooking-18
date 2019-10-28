@@ -60,15 +60,14 @@
     return card;
   };
 
-  var onCardEscPress = function (evt, obj) {
-    if (evt.keyCode === window.util.ESC) {
-      obj.card.classList.add('hidden');
-      document.removeEventListener('keydown', onCardEscPress(obj));
-    }
-  };
+  // var onCardEscPress = function (evt) {
+  //   // if (evt.keyCode === window.util.ESC) {
+  //   //   window.card.removeOnKeydown(this);
+  //   // }
+  // };
 
   window.card = {
-    renderCards: function (adverts) {
+    render: function (adverts) {
       var fragment = document.createDocumentFragment();
       for (var i = 0; i < adverts.length; i++) {
         fragment.appendChild(generateCard(adverts[i]));
@@ -76,36 +75,53 @@
       }
       return fragment;
     },
-    openCard: function (obj) {
+    removeCurrent: function () {
+      var currentCards = window.map.mapOfAdvert.querySelectorAll('.map__card');
+      if (currentCards.length > 0) {
+        window.card.hideCurrent(currentCards);
+        window.card.removeCards(currentCards);
+      }
+    },
+    open: function (obj) {
       obj.pin.addEventListener('click', function () {
-        window.card.hideCards(obj.advertList);
+        window.card.removeCurrent();
+        window.map.mapOfAdvert.insertBefore(obj.card, window.map.mapFiltersContainer);
         obj.card.classList.remove('hidden');
+
+        // document.addEventListener('keydown', onCardEscPress.bind(obj));
+
         document.addEventListener('keydown', function (evt) {
           if (evt.keyCode === window.util.ESC) {
             obj.card.classList.add('hidden');
-            document.removeEventListener('keydown', onCardEscPress(obj));
+            // document.removeEventListener('keydown', onCardEscPress);
+            document.removeEventListener('keydown', function () {});
           }
         });
       });
     },
-    closeCard: function (obj) {
+    close: function (obj) {
       obj.closeButton = obj.card.querySelector('.popup__close');
       obj.closeButton.addEventListener('click', function () {
-        obj.card.classList.add('hidden');
-        document.removeEventListener('keydown', onCardEscPress(obj));
+        window.card.removeOnKeydown(obj);
       });
     },
-    hideCards: function (advertList) {
+    removeOnKeydown: function (obj) {
+      obj.card.classList.add('hidden');
+      window.map.mapOfAdvert.removeChild(obj.card);
+      // document.removeEventListener('keydown', onCardEscPress);
+      document.removeEventListener('keydown', function () {});
+    },
+    hide: function (advertList) {
       for (var i = 0; i < advertList.length; i++) {
         advertList[i].card.classList.add('hidden');
       }
     },
-    hideCurrentCards: function (currentCards) {
+    hideCurrent: function (currentCards) {
       for (var i = 0; i < currentCards.length; i++) {
         currentCards[i].classList.add('hidden');
       }
     },
-    showCards: function (sameTypeAdverts) {
+    show: function (sameTypeAdverts) {
       for (var i = 0; i < sameTypeAdverts.length; i++) {
         window.map.mapOfAdvert.insertBefore(sameTypeAdverts[i].card, window.map.mapFiltersContainer);
       }
