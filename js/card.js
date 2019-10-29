@@ -60,11 +60,11 @@
     return card;
   };
 
-  // var onCardEscPress = function (evt) {
-  //   // if (evt.keyCode === window.util.ESC) {
-  //   //   window.card.removeOnKeydown(this);
-  //   // }
-  // };
+  var onCardEscPress = function (evt) {
+    if (evt.keyCode === window.util.ESC) {
+      window.card.removeCurrent();
+    }
+  };
 
   window.card = {
     render: function (adverts) {
@@ -80,36 +80,24 @@
       if (currentCards.length > 0) {
         window.card.hideCurrent(currentCards);
         window.card.removeCards(currentCards);
+        document.removeEventListener('keydown', onCardEscPress);
       }
     },
     open: function (obj) {
-      obj.pin.addEventListener('click', function () {
+      var onCardClick = function () {
         window.card.removeCurrent();
         window.map.mapOfAdvert.insertBefore(obj.card, window.map.mapFiltersContainer);
         obj.card.classList.remove('hidden');
+        document.addEventListener('keydown', onCardEscPress);
+      };
 
-        // document.addEventListener('keydown', onCardEscPress.bind(obj));
-
-        document.addEventListener('keydown', function (evt) {
-          if (evt.keyCode === window.util.ESC) {
-            obj.card.classList.add('hidden');
-            // document.removeEventListener('keydown', onCardEscPress);
-            document.removeEventListener('keydown', function () {});
-          }
-        });
-      });
+      obj.pin.addEventListener('click', onCardClick);
     },
     close: function (obj) {
       obj.closeButton = obj.card.querySelector('.popup__close');
       obj.closeButton.addEventListener('click', function () {
-        window.card.removeOnKeydown(obj);
+        window.card.removeCurrent();
       });
-    },
-    removeOnKeydown: function (obj) {
-      obj.card.classList.add('hidden');
-      window.map.mapOfAdvert.removeChild(obj.card);
-      // document.removeEventListener('keydown', onCardEscPress);
-      document.removeEventListener('keydown', function () {});
     },
     hide: function (advertList) {
       for (var i = 0; i < advertList.length; i++) {

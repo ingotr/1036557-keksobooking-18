@@ -46,26 +46,32 @@
     errorHandler: function () {
       var errorTemplate = document.querySelector('#error').content.querySelector('.error');
       var errorElement = errorTemplate.cloneNode(true);
+      var errorButton = document.querySelector('.error__button');
       var fragment = document.createDocumentFragment();
 
-      fragment.appendChild(errorElement);
-
-      window.map.main.appendChild(fragment);
-
-      var errorButton = document.querySelector('.error__button');
-      errorButton.addEventListener('click', function () {
+      var onErrorButtonClick = function () {
         errorElement.classList.add('hidden');
-      });
+        errorButton.removeEventListener('click', onErrorButtonClick);
+      };
 
-      document.addEventListener('keydown', function (evt) {
+      var onErrorElementKeydown = function (evt) {
         if (evt.keyCode === window.util.ESC) {
           errorElement.classList.add('hidden');
+          document.removeEventListener('keydown', onErrorElementKeydown);
         }
-      });
+      };
 
-      document.addEventListener('click', function () {
+      var onErrorElementClick = function () {
         errorElement.classList.add('hidden');
-      });
+        document.removeEventListener('keydown', onErrorElementClick);
+      };
+
+      fragment.appendChild(errorElement);
+      window.map.main.appendChild(fragment);
+
+      errorButton.addEventListener('click', onErrorButtonClick);
+      document.addEventListener('keydown', onErrorElementKeydown);
+      document.addEventListener('click', onErrorElementClick);
     },
   };
 

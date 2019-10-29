@@ -17,11 +17,14 @@
       var mapFilterContainer = window.map.mapOfAdvert.querySelector('.map__filters-container');
       var typeFilter = mapFilterContainer.querySelector('#housing-type');
 
-      typeFilter.addEventListener('change', function (evt) {
+      var onTypeFilterChange = function (evt) {
         window.card.removeCurrent();
         window.pin.removeCurrent();
         window.pin.show(getSameTypeAdvert(advertList, evt));
-      });
+      };
+
+      typeFilter.addEventListener('change', onTypeFilterChange);
+      typeFilter.removeEventListener('change', onTypeFilterChange);
     },
   };
 })();
