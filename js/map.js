@@ -14,6 +14,7 @@
   var mapPins = document.querySelector('.map__pins');
   var mapPinMain = document.querySelector('.map__pin--main');
   var main = mapOfAdvert.parentNode;
+  var typeFilter = mapFiltersContainer.querySelector('#housing-type');
 
   var isReceivedData = false;
 
@@ -64,7 +65,6 @@
       window.backend.load(window.data.loadHandler, window.data.errorHandler, window.data.URL);
       isReceivedData = true;
     }
-
     showMap();
   };
 
@@ -166,6 +166,7 @@
     mapPins: mapPins,
     mapFiltersContainer: mapFiltersContainer,
     runInactiveState: runInactiveState,
+    typeFilter: typeFilter,
     removeCardPinElements: function () {
       var cardElement = mapOfAdvert.querySelectorAll('.map__card');
       var pinElement = mapPins.querySelectorAll('button[type=button]');

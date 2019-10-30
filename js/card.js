@@ -63,8 +63,20 @@
   var onCardEscPress = function (evt) {
     if (evt.keyCode === window.util.ESC) {
       window.card.removeCurrent();
+      document.removeEventListener('keydown', onCardEscPress);
     }
   };
+
+  var onClose = function () {
+    window.card.removeCurrent();
+  };
+
+  // var removeEventListeners = function (currentCards) {
+  //   for (var i = 0; i < currentCards.length; i++) {
+  //     var closeButton = currentCards[i].card.querySelector('.popup__close');
+  //     closeButton.removeEventListener('click', onClose);
+  //   }
+  // };
 
   window.card = {
     render: function (adverts) {
@@ -79,6 +91,7 @@
       var currentCards = window.map.mapOfAdvert.querySelectorAll('.map__card');
       if (currentCards.length > 0) {
         window.card.hideCurrent(currentCards);
+        // removeEventListeners(currentCards);
         window.card.removeCards(currentCards);
         document.removeEventListener('keydown', onCardEscPress);
       }
@@ -89,15 +102,15 @@
         window.map.mapOfAdvert.insertBefore(obj.card, window.map.mapFiltersContainer);
         obj.card.classList.remove('hidden');
         document.addEventListener('keydown', onCardEscPress);
+        // obj.pin.removeEventListener('click', onCardClick);
       };
 
       obj.pin.addEventListener('click', onCardClick);
     },
     close: function (obj) {
       obj.closeButton = obj.card.querySelector('.popup__close');
-      obj.closeButton.addEventListener('click', function () {
-        window.card.removeCurrent();
-      });
+      obj.closeButton.addEventListener('click', onClose);
+      // obj.pin.removeEventListener('click', onCardClick);
     },
     hide: function (advertList) {
       for (var i = 0; i < advertList.length; i++) {

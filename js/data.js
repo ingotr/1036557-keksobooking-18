@@ -37,16 +37,17 @@
   window.data = {
     DEFAULT_ADVERT_COUNT: DEFAULT_ADVERT_COUNT,
     URL: 'https://js.dump.academy/keksobooking/data',
-    adverts: [],
     loadHandler: function (data) {
       adverts = data.slice(0, DEFAULT_ADVERT_COUNT);
+      window.data.adverts = adverts;
       advertList = addListenersToPinsCards(adverts);
-      window.filter.getMapFilters(advertList);
+      window.filter.setMapFilters(advertList);
+      window.data.advertList = advertList;
     },
     errorHandler: function () {
       var errorTemplate = document.querySelector('#error').content.querySelector('.error');
       var errorElement = errorTemplate.cloneNode(true);
-      var errorButton = document.querySelector('.error__button');
+      var errorButton = errorElement.querySelector('.error__button');
       var fragment = document.createDocumentFragment();
 
       var onErrorButtonClick = function () {
