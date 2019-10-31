@@ -6,57 +6,73 @@
   var adverts = [];
   var advertList = [];
 
-  function AdvertElement(pin, card) {
+  function AdvertElement(pin, card, advertData, advertDataList) {
     this.pin = pin;
     this.card = card;
+    this.advert = advertData;
+    this.advertList = advertDataList;
 
-    window.card.openCard(this);
-    window.card.closeCard(this);
+    window.card.open(this);
+    window.card.close(this);
   }
 
-  // eslint-disable-next-line no-shadow
-  var addListenersToPinsCards = function (adverts) {
-    var pinsList = window.pin.renderPins(adverts);
-    var cardList = window.card.renderCards(adverts);
+  var getFirstFiveAdverts = function (pinList) {
+    for (var i = 0; i < window.util.DEFAULT_PINS_NUMBER; i++) {
+      window.map.mapPins.appendChild(pinList[i].pin);
+      pinList[i].pin.classList.remove('hidden');
+    }
+  };
+
+  var addListenersToPinsCards = function (advertData) {
+    var pinsList = window.pin.render(advertData);
+    var cardList = window.card.render(advertData);
 
     for (var i = 0; i < adverts.length; i++) {
-      advertList[i] = new AdvertElement(pinsList.children[i], cardList.children[i]);
+      advertList[i] = new AdvertElement(pinsList.children[i], cardList.children[i], adverts[i], advertList);
     }
-    window.map.mapPins.appendChild(pinsList);
-    window.map.mapOfAdvert.insertBefore(cardList, window.map.mapFiltersContainer);
+    getFirstFiveAdverts(advertList);
+    return advertList;
   };
 
   window.data = {
+    DEFAULT_ADVERT_COUNT: DEFAULT_ADVERT_COUNT,
     URL: 'https://js.dump.academy/keksobooking/data',
-    adverts: [],
     loadHandler: function (data) {
       adverts = data.slice(0, DEFAULT_ADVERT_COUNT);
-
-      addListenersToPinsCards(adverts);
+      window.data.adverts = adverts;
+      advertList = addListenersToPinsCards(adverts);
+      window.filter.setMapFilters(advertList);
+      window.data.advertList = advertList;
     },
     errorHandler: function () {
       var errorTemplate = document.querySelector('#error').content.querySelector('.error');
       var errorElement = errorTemplate.cloneNode(true);
+      var errorButton = errorElement.querySelector('.error__button');
       var fragment = document.createDocumentFragment();
 
-      fragment.appendChild(errorElement);
-
-      window.map.main.appendChild(fragment);
-
-      var errorButton = document.querySelector('.error__button');
-      errorButton.addEventListener('click', function () {
+      var onErrorButtonClick = function () {
         errorElement.classList.add('hidden');
-      });
+        errorButton.removeEventListener('click', onErrorButtonClick);
+      };
 
-      document.addEventListener('keydown', function (evt) {
+      var onErrorElementKeydown = function (evt) {
         if (evt.keyCode === window.util.ESC) {
           errorElement.classList.add('hidden');
+          document.removeEventListener('keydown', onErrorElementKeydown);
         }
-      });
+      };
 
-      document.addEventListener('click', function () {
+      var onErrorElementClick = function () {
         errorElement.classList.add('hidden');
-      });
+        document.removeEventListener('keydown', onErrorElementClick);
+      };
+
+      fragment.appendChild(errorElement);
+      window.map.main.appendChild(fragment);
+
+      errorButton.addEventListener('click', onErrorButtonClick);
+      document.addEventListener('keydown', onErrorElementKeydown);
+      document.addEventListener('click', onErrorElementClick);
     },
   };
 

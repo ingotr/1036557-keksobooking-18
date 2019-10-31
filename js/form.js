@@ -59,6 +59,9 @@
   var features = adForm.querySelector('.features');
   var adFormFeaturesElement = features.querySelectorAll('.feature__checkbox');
 
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
+  var successElement = successTemplate.cloneNode(true);
+
   var returnDefaultFormSettings = function () {
     adFormTitleElement.value = FORM_DEFAULT_VALUES.title;
     selectGuestsElement.value = FORM_DEFAULT_VALUES.guestNumbers;
@@ -72,6 +75,15 @@
       adFormFeaturesElement[i].checked = false;
     }
     getPriceByType();
+
+    selectType.removeEventListener('change', getPriceByType);
+    selectTimein.removeEventListener('change', synchronizeTimein);
+    selectTimeout.removeEventListener('change', synchronizeTimeout);
+    selectRoomsElement.removeEventListener('change', validateRoomsGuestsNumber);
+    selectGuestsElement.removeEventListener('change', validateRoomsGuestsNumber);
+    document.removeEventListener('keydown', onEscPress);
+    document.removeEventListener('click', onSuccessElementClick);
+    adForm.removeEventListener('submit', onFormSubmit);
   };
 
   var disableAdFormElements = function () {
@@ -122,27 +134,28 @@
 
   var URL_SAVE = 'https://js.dump.academy/keksobooking';
 
+  var onEscPress = function (evt) {
+    if (evt.keyCode === window.util.ESC) {
+      successElement.classList.add('hidden');
+    }
+  };
+
+  var onSuccessElementClick = function () {
+    successElement.classList.add('hidden');
+  };
+
   var getSuccessMessage = function () {
-    var successTemplate = document.querySelector('#success').content.querySelector('.success');
-    var successElement = successTemplate.cloneNode(true);
     var fragment = document.createDocumentFragment();
 
     fragment.appendChild(successElement);
 
     window.map.main.appendChild(fragment);
 
-    document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.util.ESC) {
-        successElement.classList.add('hidden');
-      }
-    });
-
-    document.addEventListener('click', function () {
-      successElement.classList.add('hidden');
-    });
+    document.addEventListener('keydown', onEscPress);
+    document.addEventListener('click', onSuccessElementClick);
   };
 
-  adForm.addEventListener('submit', function (evt) {
+  var onFormSubmit = function (evt) {
     window.backend.save(function () {
       window.map.runInactiveState();
       window.map.removeCardPinElements();
@@ -151,7 +164,9 @@
       getSuccessMessage();
     }, window.data.errorHandler, URL_SAVE, new FormData(adForm));
     evt.preventDefault();
-  });
+  };
+
+  adForm.addEventListener('submit', onFormSubmit);
 
   window.form = {
     adForm: adForm,

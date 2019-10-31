@@ -60,15 +60,19 @@
     return card;
   };
 
-  var onCardEscPress = function (evt, obj) {
+  var onCardEscPress = function (evt) {
     if (evt.keyCode === window.util.ESC) {
-      obj.card.classList.add('hidden');
-      document.removeEventListener('keydown', onCardEscPress(obj));
+      window.card.removeCurrent();
+      document.removeEventListener('keydown', onCardEscPress);
     }
   };
 
+  var onCardClose = function () {
+    window.card.removeCurrent();
+  };
+
   window.card = {
-    renderCards: function (adverts) {
+    render: function (adverts) {
       var fragment = document.createDocumentFragment();
       for (var i = 0; i < adverts.length; i++) {
         fragment.appendChild(generateCard(adverts[i]));
@@ -76,23 +80,49 @@
       }
       return fragment;
     },
-    openCard: function (obj) {
-      obj.pin.addEventListener('click', function () {
-        obj.card.classList.remove('hidden');
-        document.addEventListener('keydown', function (evt) {
-          if (evt.keyCode === window.util.ESC) {
-            obj.card.classList.add('hidden');
-            document.removeEventListener('keydown', onCardEscPress(obj));
-          }
-        });
-      });
+    removeCurrent: function () {
+      var currentCards = window.map.mapOfAdvert.querySelectorAll('.map__card');
+      if (currentCards.length > 0) {
+        window.card.hideCurrent(currentCards);
+        window.card.removeCards(currentCards);
+        document.removeEventListener('keydown', onCardEscPress);
+      }
     },
-    closeCard: function (obj) {
+    open: function (obj) {
+      var onCardClick = function () {
+        window.card.removeCurrent();
+        window.map.mapOfAdvert.insertBefore(obj.card, window.map.mapFiltersContainer);
+        obj.card.classList.remove('hidden');
+        document.addEventListener('keydown', onCardEscPress);
+      };
+
+      obj.pin.removeEventListener('click', onCardClick);
+      obj.pin.addEventListener('click', onCardClick);
+    },
+    close: function (obj) {
       obj.closeButton = obj.card.querySelector('.popup__close');
-      obj.closeButton.addEventListener('click', function () {
-        obj.card.classList.add('hidden');
-        document.removeEventListener('keydown', onCardEscPress(obj));
-      });
+      obj.closeButton.removeEventListener('click', onCardClose);
+      obj.closeButton.addEventListener('click', onCardClose);
+    },
+    hide: function (advertList) {
+      for (var i = 0; i < advertList.length; i++) {
+        advertList[i].card.classList.add('hidden');
+      }
+    },
+    hideCurrent: function (currentCards) {
+      for (var i = 0; i < currentCards.length; i++) {
+        currentCards[i].classList.add('hidden');
+      }
+    },
+    show: function (sameTypeAdverts) {
+      for (var i = 0; i < sameTypeAdverts.length; i++) {
+        window.map.mapOfAdvert.insertBefore(sameTypeAdverts[i].card, window.map.mapFiltersContainer);
+      }
+    },
+    removeCards: function (currentCards) {
+      for (var i = 0; i < currentCards.length; i++) {
+        window.map.mapOfAdvert.removeChild(currentCards[i]);
+      }
     },
   };
 

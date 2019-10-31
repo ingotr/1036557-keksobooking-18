@@ -14,6 +14,7 @@
   var mapPins = document.querySelector('.map__pins');
   var mapPinMain = document.querySelector('.map__pin--main');
   var main = mapOfAdvert.parentNode;
+  var typeFilter = mapFiltersContainer.querySelector('#housing-type');
 
   var isReceivedData = false;
 
@@ -52,6 +53,13 @@
     mapPinMain.style.left = MAIN_PIN_DEFAULT_LEFT - (mapPinMain.offsetWidth / 2) + 'px';
   };
 
+  var onEnterPress = function (evt) {
+    if (evt.keyCode === window.util.ENTER) {
+      runActiveState();
+      getPinMainAdress();
+    }
+  };
+
   var runActiveState = function () {
     for (var i = 0; i < window.form.adFormFieldsets.length; i++) {
       window.form.adFormFieldsets[i].removeAttribute('disabled');
@@ -64,18 +72,14 @@
       window.backend.load(window.data.loadHandler, window.data.errorHandler, window.data.URL);
       isReceivedData = true;
     }
-
     showMap();
+    mapPinMain.removeEventListener('keydown', onEnterPress);
   };
 
   var runInactiveState = function () {
     isReceivedData = false;
-    mapPinMain.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.util.ENTER) {
-        runActiveState();
-        getPinMainAdress();
-      }
-    });
+    mapPinMain.addEventListener('keydown', onEnterPress);
+
     window.form.disableAdFormElements();
     disableMapFilters();
     getPinMainDefaultAdress();
@@ -166,6 +170,7 @@
     mapPins: mapPins,
     mapFiltersContainer: mapFiltersContainer,
     runInactiveState: runInactiveState,
+    typeFilter: typeFilter,
     removeCardPinElements: function () {
       var cardElement = mapOfAdvert.querySelectorAll('.map__card');
       var pinElement = mapPins.querySelectorAll('button[type=button]');
