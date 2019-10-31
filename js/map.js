@@ -53,6 +53,13 @@
     mapPinMain.style.left = MAIN_PIN_DEFAULT_LEFT - (mapPinMain.offsetWidth / 2) + 'px';
   };
 
+  var onEnterPress = function (evt) {
+    if (evt.keyCode === window.util.ENTER) {
+      runActiveState();
+      getPinMainAdress();
+    }
+  };
+
   var runActiveState = function () {
     for (var i = 0; i < window.form.adFormFieldsets.length; i++) {
       window.form.adFormFieldsets[i].removeAttribute('disabled');
@@ -66,16 +73,13 @@
       isReceivedData = true;
     }
     showMap();
+    mapPinMain.removeEventListener('keydown', onEnterPress);
   };
 
   var runInactiveState = function () {
     isReceivedData = false;
-    mapPinMain.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.util.ENTER) {
-        runActiveState();
-        getPinMainAdress();
-      }
-    });
+    mapPinMain.addEventListener('keydown', onEnterPress);
+
     window.form.disableAdFormElements();
     disableMapFilters();
     getPinMainDefaultAdress();

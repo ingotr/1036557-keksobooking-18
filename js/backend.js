@@ -8,19 +8,28 @@
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
-    xhr.addEventListener('load', function () {
+    var onXhrLoad = function () {
       if (xhr.status === REQUEST_STATUS_OK) {
         onLoad(xhr.response);
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
-    });
-    xhr.addEventListener('error', function () {
+      xhr.removeEventListener('load', onXhrLoad);
+    };
+
+    var onXhrError = function () {
       onError('Произошла ошибка соединения');
-    });
-    xhr.addEventListener('timeout', function () {
+      xhr.removeEventListener('error', onXhrError);
+    };
+
+    var onXhrTimeout = function () {
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-    });
+      xhr.removeEventListener('timeout', onXhrTimeout);
+    };
+
+    xhr.addEventListener('load', onXhrLoad);
+    xhr.addEventListener('error', onXhrError);
+    xhr.addEventListener('timeout', onXhrTimeout);
 
     xhr.timeout = XHR_TIMEOUT;
     xhr.open(requestType, URL);
