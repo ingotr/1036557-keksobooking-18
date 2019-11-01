@@ -15,6 +15,16 @@
   var mapPinMain = document.querySelector('.map__pin--main');
   var main = mapOfAdvert.parentNode;
   var typeFilter = mapFiltersContainer.querySelector('#housing-type');
+  var priceFilter = mapFiltersContainer.querySelector('#housing-price');
+  var roomsFilter = mapFiltersContainer.querySelector('#housing-rooms');
+  var guestsFilter = mapFiltersContainer.querySelector('#housing-guests');
+  var featuresFilter = mapFiltersContainer.querySelector('#housing-features');
+  var featuresWiFiFilter = featuresFilter.querySelector('#filter-wifi');
+  var featuresDishwasherFilter = featuresFilter.querySelector('#filter-dishwasher');
+  var featuresParkingFilter = featuresFilter.querySelector('#filter-parking');
+  var featuresWasherFilter = featuresFilter.querySelector('#filter-washer');
+  var featuresElevatorFilter = featuresFilter.querySelector('#filter-elevator');
+  var featuresConditionerFilter = featuresFilter.querySelector('#filter-conditioner');
 
   var isReceivedData = false;
 
@@ -171,6 +181,15 @@
     mapFiltersContainer: mapFiltersContainer,
     runInactiveState: runInactiveState,
     typeFilter: typeFilter,
+    priceFilter: priceFilter,
+    roomsFilter: roomsFilter,
+    guestsFilter: guestsFilter,
+    featuresWiFiFilter: featuresWiFiFilter,
+    featuresDishwasherFilter: featuresDishwasherFilter,
+    featuresParkingFilter: featuresParkingFilter,
+    featuresWasherFilter: featuresWasherFilter,
+    featuresElevatorFilter: featuresElevatorFilter,
+    featuresConditionerFilter: featuresConditionerFilter,
     removeCardPinElements: function () {
       var cardElement = mapOfAdvert.querySelectorAll('.map__card');
       var pinElement = mapPins.querySelectorAll('button[type=button]');
