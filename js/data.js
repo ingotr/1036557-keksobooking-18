@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var DEFAULT_ADVERT_COUNT = 8;
+  var DEFAULT_ADVERT_COUNT = 10;
 
   var adverts = [];
   var advertList = [];
@@ -11,6 +11,13 @@
     this.card = card;
     this.advert = advertData;
     this.advertList = advertDataList;
+    this.rank = {
+      typeRank: 0,
+      priceRank: 0,
+      roomsRank: 0,
+      guestsRank: 0,
+      featuresRank: 0,
+    };
 
     window.card.open(this);
     window.card.close(this);
@@ -41,7 +48,7 @@
       adverts = data.slice(0, DEFAULT_ADVERT_COUNT);
       window.data.adverts = adverts;
       advertList = addListenersToPinsCards(adverts);
-      window.filter.setMapFilters(advertList);
+      // window.filter.setMapFilters(advertList);
       window.data.advertList = advertList;
     },
     errorHandler: function () {

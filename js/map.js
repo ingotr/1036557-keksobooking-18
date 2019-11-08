@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var DECIMAL_RADIX = 10;
   var MAIN_PIN_DEFAULT_LEFT = 603;
   var MAIN_PIN_DEFAULT_TOP = 408;
   var MAIN_PIN_LIMIT_TOP = 130;
@@ -19,12 +18,6 @@
   var roomsFilter = mapFiltersContainer.querySelector('#housing-rooms');
   var guestsFilter = mapFiltersContainer.querySelector('#housing-guests');
   var featuresFilter = mapFiltersContainer.querySelector('#housing-features');
-  var featuresWiFiFilter = featuresFilter.querySelector('#filter-wifi');
-  var featuresDishwasherFilter = featuresFilter.querySelector('#filter-dishwasher');
-  var featuresParkingFilter = featuresFilter.querySelector('#filter-parking');
-  var featuresWasherFilter = featuresFilter.querySelector('#filter-washer');
-  var featuresElevatorFilter = featuresFilter.querySelector('#filter-elevator');
-  var featuresConditionerFilter = featuresFilter.querySelector('#filter-conditioner');
 
   var isReceivedData = false;
 
@@ -47,8 +40,8 @@
   var getPinAxisCoordinate = function (pinElementCoordinate, distanceToPinTip) {
     var pinElement = pinElementCoordinate;
     var pxIndex = pinElement.indexOf('px');
-    var pinElementNumber = parseInt(pinElement.slice(0, pxIndex), DECIMAL_RADIX);
-    var pinAxisCoordinate = parseInt(pinElementNumber, DECIMAL_RADIX) + distanceToPinTip;
+    var pinElementNumber = parseInt(pinElement.slice(0, pxIndex), window.util.DECIMAL_RADIX);
+    var pinAxisCoordinate = parseInt(pinElementNumber, window.util.DECIMAL_RADIX) + distanceToPinTip;
     return pinAxisCoordinate;
   };
 
@@ -81,6 +74,7 @@
     if (!isReceivedData) {
       window.backend.load(window.data.loadHandler, window.data.errorHandler, window.data.URL);
       isReceivedData = true;
+      window.filter.setMapFilters(window.data.advertList);
     }
     showMap();
     mapPinMain.removeEventListener('keydown', onEnterPress);
@@ -184,12 +178,7 @@
     priceFilter: priceFilter,
     roomsFilter: roomsFilter,
     guestsFilter: guestsFilter,
-    featuresWiFiFilter: featuresWiFiFilter,
-    featuresDishwasherFilter: featuresDishwasherFilter,
-    featuresParkingFilter: featuresParkingFilter,
-    featuresWasherFilter: featuresWasherFilter,
-    featuresElevatorFilter: featuresElevatorFilter,
-    featuresConditionerFilter: featuresConditionerFilter,
+    featuresFilter: featuresFilter,
     removeCardPinElements: function () {
       var cardElement = mapOfAdvert.querySelectorAll('.map__card');
       var pinElement = mapPins.querySelectorAll('button[type=button]');
