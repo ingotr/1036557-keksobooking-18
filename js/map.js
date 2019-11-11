@@ -9,15 +9,9 @@
 
   var mapOfAdvert = document.querySelector('.map');
   var mapFilters = document.querySelector('.map__filters');
-  var mapFiltersContainer = document.querySelector('.map__filters-container');
   var mapPins = document.querySelector('.map__pins');
   var mapPinMain = document.querySelector('.map__pin--main');
   var main = mapOfAdvert.parentNode;
-  var typeFilter = mapFiltersContainer.querySelector('#housing-type');
-  var priceFilter = mapFiltersContainer.querySelector('#housing-price');
-  var roomsFilter = mapFiltersContainer.querySelector('#housing-rooms');
-  var guestsFilter = mapFiltersContainer.querySelector('#housing-guests');
-  var featuresFilter = mapFiltersContainer.querySelector('#housing-features');
 
   var isReceivedData = false;
 
@@ -172,13 +166,7 @@
     main: main,
     mapOfAdvert: mapOfAdvert,
     mapPins: mapPins,
-    mapFiltersContainer: mapFiltersContainer,
     runInactiveState: runInactiveState,
-    typeFilter: typeFilter,
-    priceFilter: priceFilter,
-    roomsFilter: roomsFilter,
-    guestsFilter: guestsFilter,
-    featuresFilter: featuresFilter,
     removeCardPinElements: function () {
       var cardElement = mapOfAdvert.querySelectorAll('.map__card');
       var pinElement = mapPins.querySelectorAll('button[type=button]');
