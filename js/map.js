@@ -13,6 +13,11 @@
   var mapPinMain = document.querySelector('.map__pin--main');
   var main = mapOfAdvert.parentNode;
 
+  var avatarFileChooser = document.querySelector('.ad-form-header__input');
+  var avatarPreview = document.querySelector('.ad-form-header__preview-img');
+  var houseFileChooser = document.querySelector('.ad-form__input');
+  var housePreview = document.querySelector('.ad-form__photo__preview-img');
+
   var isReceivedData = false;
 
   var disableMapFilters = function () {
@@ -74,12 +79,18 @@
     mapPinMain.removeEventListener('keydown', onEnterPress);
   };
 
+  var clearPhotosPreview = function () {
+    avatarPreview.src = 'img/muffin-grey.svg';
+    housePreview.src = 'img/muffin-grey.svg';
+  };
+
   var runInactiveState = function () {
     isReceivedData = false;
     mapPinMain.addEventListener('keydown', onEnterPress);
 
     window.form.disableAdFormElements();
     disableMapFilters();
+    clearPhotosPreview();
     getPinMainDefaultAdress();
     getPinMainAdressInactive();
     window.form.getPriceByType();
@@ -167,6 +178,10 @@
     mapOfAdvert: mapOfAdvert,
     mapPins: mapPins,
     runInactiveState: runInactiveState,
+    avatarFileChooser: avatarFileChooser,
+    houseFileChooser: houseFileChooser,
+    avatarPreview: avatarPreview,
+    housePreview: housePreview,
     removeCardPinElements: function () {
       var cardElement = mapOfAdvert.querySelectorAll('.map__card');
       var pinElement = mapPins.querySelectorAll('button[type=button]');
