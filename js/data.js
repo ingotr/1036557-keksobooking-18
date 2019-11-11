@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var DEFAULT_ADVERT_COUNT = 8;
+  var DEFAULT_ADVERT_COUNT = 10;
 
   var adverts = [];
   var advertList = [];
@@ -41,7 +41,6 @@
       adverts = data.slice(0, DEFAULT_ADVERT_COUNT);
       window.data.adverts = adverts;
       advertList = addListenersToPinsCards(adverts);
-      window.filter.setMapFilters(advertList);
       window.data.advertList = advertList;
     },
     errorHandler: function () {
