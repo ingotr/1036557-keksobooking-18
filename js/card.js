@@ -84,7 +84,7 @@
       var currentCards = window.map.mapOfAdvert.querySelectorAll('.map__card');
       if (currentCards.length > 0) {
         window.card.hideCurrent(currentCards);
-        window.card.removeCards(currentCards);
+        window.card.remove(currentCards);
         document.removeEventListener('keydown', onCardEscPress);
       }
     },
@@ -119,7 +119,7 @@
         window.map.mapOfAdvert.insertBefore(sameTypeAdverts[i].card, window.map.mapFiltersContainer);
       }
     },
-    removeCards: function (currentCards) {
+    remove: function (currentCards) {
       for (var i = 0; i < currentCards.length; i++) {
         window.map.mapOfAdvert.removeChild(currentCards[i]);
       }

@@ -3,8 +3,8 @@
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
-  var onFileChange = function (filePreviewer) {
-    var file = event.target.files[0];
+  var onFileChange = function (evt) {
+    var file = evt.target.files[0];
     var fileName = file.name.toLowerCase();
 
     var matches = FILE_TYPES.some(function (it) {
@@ -12,16 +12,16 @@
     });
 
     if (event.target.id === 'avatar') {
-      filePreviewer = window.map.avatarPreview;
+      evt = window.map.avatarPreview;
     } else {
-      filePreviewer = window.map.housePreview;
+      evt = window.map.housePreview;
     }
 
     if (matches) {
       var reader = new FileReader();
 
       reader.addEventListener('load', function () {
-        filePreviewer.src = reader.result;
+        evt.src = reader.result;
       });
 
       reader.readAsDataURL(file);
