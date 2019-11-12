@@ -48,41 +48,41 @@
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
   var adFormAdress = adForm.querySelector('#address');
-  var adFormTitleElement = adForm.querySelector('#title');
-  var selectRoomsElement = adForm.querySelector('#room_number');
-  var selectGuestsElement = adForm.querySelector('#capacity');
+  var adFormTitle = adForm.querySelector('#title');
+  var selectRooms = adForm.querySelector('#room_number');
+  var selectGuests = adForm.querySelector('#capacity');
   var selectTimein = adForm.querySelector('#timein');
   var selectTimeout = adForm.querySelector('#timeout');
   var selectType = adForm.querySelector('#type');
   var numberPrice = adForm.querySelector('#price');
-  var adFormDescriptionElement = adForm.querySelector('#description');
+  var adFormDescription = adForm.querySelector('#description');
   var features = adForm.querySelector('.features');
-  var adFormFeaturesElement = features.querySelectorAll('.feature__checkbox');
+  var adFormFeatures = features.querySelectorAll('.feature__checkbox');
 
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
-  var successElement = successTemplate.cloneNode(true);
+  var successWindow = successTemplate.cloneNode(true);
 
   var returnDefaultFormSettings = function () {
-    adFormTitleElement.value = FORM_DEFAULT_VALUES.title;
-    selectGuestsElement.value = FORM_DEFAULT_VALUES.guestNumbers;
+    adFormTitle.value = FORM_DEFAULT_VALUES.title;
+    selectGuests.value = FORM_DEFAULT_VALUES.guestNumbers;
     selectTimein.value = FORM_DEFAULT_VALUES.timein;
     selectTimeout.value = FORM_DEFAULT_VALUES.timeout;
     numberPrice.value = FORM_DEFAULT_VALUES.price;
     selectType.value = FORM_DEFAULT_VALUES.type;
-    adFormDescriptionElement.value = FORM_DEFAULT_VALUES.description;
+    adFormDescription.value = FORM_DEFAULT_VALUES.description;
 
-    for (var i = 0; i < adFormFeaturesElement.length; i++) {
-      adFormFeaturesElement[i].checked = false;
+    for (var i = 0; i < adFormFeatures.length; i++) {
+      adFormFeatures[i].checked = false;
     }
     getPriceByType();
 
     selectType.removeEventListener('change', getPriceByType);
     selectTimein.removeEventListener('change', synchronizeTimein);
     selectTimeout.removeEventListener('change', synchronizeTimeout);
-    selectRoomsElement.removeEventListener('change', validateRoomsGuestsNumber);
-    selectGuestsElement.removeEventListener('change', validateRoomsGuestsNumber);
+    selectRooms.removeEventListener('change', validateRoomsGuestsNumber);
+    selectGuests.removeEventListener('change', validateRoomsGuestsNumber);
     document.removeEventListener('keydown', onEscPress);
-    document.removeEventListener('click', onSuccessElementClick);
+    document.removeEventListener('click', onSuccessWindowClick);
     adForm.removeEventListener('submit', onFormSubmit);
   };
 
@@ -103,13 +103,13 @@
   };
 
   var validateRoomsGuestsNumber = function () {
-    var rooms = selectRoomsElement.value;
-    var guests = selectGuestsElement.value;
+    var rooms = selectRooms.value;
+    var guests = selectGuests.value;
 
     if ((ROOMS_GUESTS_CONFIG[rooms].val.indexOf(guests)) === -1) {
-      selectRoomsElement.setCustomValidity(ROOMS_GUESTS_CONFIG[rooms].errMsg);
+      selectRooms.setCustomValidity(ROOMS_GUESTS_CONFIG[rooms].errMsg);
     } else {
-      selectRoomsElement.setCustomValidity('');
+      selectRooms.setCustomValidity('');
     }
   };
 
@@ -128,31 +128,31 @@
   selectType.addEventListener('change', getPriceByType);
   selectTimein.addEventListener('change', synchronizeTimein);
   selectTimeout.addEventListener('change', synchronizeTimeout);
-  selectRoomsElement.addEventListener('change', validateRoomsGuestsNumber);
-  selectGuestsElement.addEventListener('change', validateRoomsGuestsNumber);
+  selectRooms.addEventListener('change', validateRoomsGuestsNumber);
+  selectGuests.addEventListener('change', validateRoomsGuestsNumber);
 
 
   var URL_SAVE = 'https://js.dump.academy/keksobooking';
 
   var onEscPress = function (evt) {
     if (evt.keyCode === window.util.ESC) {
-      successElement.classList.add('hidden');
+      successWindow.classList.add('hidden');
     }
   };
 
-  var onSuccessElementClick = function () {
-    successElement.classList.add('hidden');
+  var onSuccessWindowClick = function () {
+    successWindow.classList.add('hidden');
   };
 
   var getSuccessMessage = function () {
     var fragment = document.createDocumentFragment();
 
-    fragment.appendChild(successElement);
+    fragment.appendChild(successWindow);
 
     window.map.main.appendChild(fragment);
 
     document.addEventListener('keydown', onEscPress);
-    document.addEventListener('click', onSuccessElementClick);
+    document.addEventListener('click', onSuccessWindowClick);
   };
 
   var onFormSubmit = function (evt) {

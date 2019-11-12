@@ -4,14 +4,14 @@
   var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
   var generate = function (advert) {
-    var pinElement = mapPinTemplate.cloneNode(true);
-    var pinElementImg = pinElement.querySelector('img');
+    var pin = mapPinTemplate.cloneNode(true);
+    var pinImg = pin.querySelector('img');
 
-    pinElement.style = 'left: ' + advert.location.x + 'px; top: ' + advert.location.y + 'px;';
-    pinElementImg.src = advert.author.avatar;
-    pinElementImg.alt = advert.offer.title;
+    pin.style = 'left: ' + advert.location.x + 'px; top: ' + advert.location.y + 'px;';
+    pinImg.src = advert.author.avatar;
+    pinImg.alt = advert.offer.title;
 
-    return pinElement;
+    return pin;
   };
 
   window.pin = {
